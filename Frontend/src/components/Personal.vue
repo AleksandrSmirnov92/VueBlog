@@ -16,17 +16,18 @@
     </div>
     <div class="mt-8"></div>
     <div class="flex justify-center">
-      <div class="flex justify-between w-2/6 justify-items-center">
+      <div class="flex flex-col sm:flex-row sm:justify-center sm:w-full">
         <router-link
           to="/SignIn"
-          class="w-full text-center mr-1 py-2 px-4 bg-green-600 text-white front-semibold text-2xl shadow-md hover:bg-green-500 cursor-pointer rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          class="w-full sm:mx-4 sm:w-1/6 sm:min-w-min text-center my-2 px-2 py-2 bg-green-600 text-white front-semibold text-2xl shadow-md hover:bg-green-500 cursor-pointer rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
-          Войти </router-link
+          <span class="sm:mx-24">Войти</span> </router-link
         ><router-link
-          class="w-full text-center mr-1 py-2 px-4 bg-blue-600 text-white front-semibold text-2xl shadow-md hover:bg-blue-500 cursor-pointer rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          class="w-full sm:mx-4 sm:w-1/6 sm:min-w-min text-center my-2 px-2 py-2 bg-blue-600 text-white front-semibold text-2xl shadow-md hover:bg-blue-500 cursor-pointer rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           to="/SignUp"
-          >Зарегестрироваться</router-link
         >
+          <span class="sm:mx-7">Зарегестрироваться</span>
+        </router-link>
       </div>
     </div>
   </div>

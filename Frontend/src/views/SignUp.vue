@@ -1,4 +1,12 @@
-<script setup></script>
+<script setup>
+import TextInput from "../components/global/TextInput.vue";
+import { ref } from "vue";
+const firstName = ref(null);
+const lastName = ref(null);
+const password = ref(null);
+const repeatPassword = ref(null);
+const email = ref(null);
+</script>
 <template>
   <div id="SignUp" class="w-full p-6 flex justify-center items-center">
     <div class="bg-gray-100 p-8 shadow rounded mb-6">
@@ -6,46 +14,47 @@
         Регистрация
       </h1>
       <div class="mb-4 flex flex-col">
-        <label for="" class="text-gray-700 pb-4 pt-4 text-base font-bold"
-          >Имя</label
-        >
-        <input
-          class="appearance-none block w-full bg-white text-gray-700 border border-fray-400 rounded px-4 py-1 focus:outline-none focus:bg-gray-200 focus:border-gray-500"
-          type="text"
+        <TextInput
+          label="Имя"
+          :labelColor="false"
+          placeholder="Введите имя"
+          v-model:input="firstName"
+          inputType="text"
+          error="Тестовая ошибка"
         />
-        <span class="text-red-600">Здесь будет сообщение об ошибке</span>
-        <label for="" class="text-gray-700 pb-4 pt-4 text-base font-bold"
-          >Фамилия</label
-        >
-        <input
-          class="appearance-none block w-full bg-white text-gray-700 border border-fray-400 rounded px-4 py-1 focus:outline-none focus:bg-gray-200 focus:border-gray-500"
-          type="text"
+        <TextInput
+          label="Фамилия"
+          :labelColor="false"
+          placeholder="Введите Фамилию"
+          v-model:input="lastName"
+          inputType="text"
+          error="Тестовая ошибка"
         />
-        <span class="text-red-600">Здесь будет сообщение об ошибке</span>
-        <label for="" class="text-gray-700 pb-4 pt-4 text-base font-bold"
-          >Пароль</label
-        >
-        <input
-          class="appearance-none block w-full bg-white text-gray-700 border border-fray-400 rounded px-4 py-1 focus:outline-none focus:bg-gray-200 focus:border-gray-500"
-          type="text"
+        <TextInput
+          label="Пароль"
+          :labelColor="false"
+          placeholder="Введите пароль"
+          v-model:input="password"
+          inputType="password"
+          error="Тестовая ошибка"
         />
-        <span class="text-red-600">Здесь будет сообщение об ошибке</span>
-        <label for="" class="text-gray-700 pb-4 pt-4 text-base font-bold"
-          >Повторите пароль</label
-        >
-        <input
-          class="appearance-none block w-full bg-white text-gray-700 border border-fray-400 rounded px-4 py-1 focus:outline-none focus:bg-gray-200 focus:border-gray-500"
-          type="text"
+
+        <TextInput
+          label="Повторите пароль"
+          :labelColor="false"
+          placeholder="Повторите пароль"
+          v-model:input="repeatPassword"
+          inputType="password"
+          error="Тестовая ошибка"
         />
-        <span class="text-red-600">Здесь будет сообщение об ошибке</span>
-        <label for="" class="text-gray-700 pb-4 pt-4 text-base font-bold"
-          >Электронная почта</label
-        >
-        <input
-          class="appearance-none block w-full bg-white text-gray-700 border border-fray-400 rounded px-4 py-1 focus:outline-none focus:bg-gray-200 focus:border-gray-500"
-          type="text"
+        <TextInput
+          label="Электронная почта"
+          :labelColor="false"
+          placeholder="Введите электронную почту"
+          v-model:input="email"
+          inputType="Email"
+          error="Тестовая ошибка"
         />
-        <span class="text-red-600">Здесь будет сообщение об ошибке</span>
         <button
           class="block bg-green-500 w-full text-white py-2 font-bold mt-6 cursor-pointer hover:bg-green-700 rounded-lg"
           type="submit"
@@ -64,4 +73,5 @@
     </div>
   </div>
 </template>
+
 <style scoped></style>
