@@ -6,6 +6,9 @@ const lastName = ref(null);
 const password = ref(null);
 const repeatPassword = ref(null);
 const email = ref(null);
+function showFirstName(params) {
+  console.log(firstName.value);
+}
 </script>
 <template>
   <div id="SignUp" class="w-full p-6 flex justify-center items-center">
@@ -58,6 +61,7 @@ const email = ref(null);
         <button
           class="block bg-green-500 w-full text-white py-2 font-bold mt-6 cursor-pointer hover:bg-green-700 rounded-lg"
           type="submit"
+          @click="showFirstName"
         >
           Зарегестрироваться
         </button>
