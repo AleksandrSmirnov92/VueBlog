@@ -11,12 +11,14 @@ function showFirstName(params) {
 }
 </script>
 <template>
-  <div id="SignUp" class="w-full p-6 flex justify-center items-center">
-    <div class="bg-gray-100 p-8 shadow rounded mb-6">
-      <h1 class="mb-6 text-lg text-gray-900 font-bold text-center">
+  <div id="SignUp" class="flex justify-center items-centr min-w-min">
+    <div
+      class="w-full sm:w-auto bg-gray-100 mt-0 sm:mt-6 sm:mb-6 shadow rounded"
+    >
+      <h1 class="mb-6 mt-6 text-lg text-gray-900 font-bold text-center">
         Регистрация
       </h1>
-      <div class="mb-4 flex flex-col">
+      <div class="mb-4 flex flex-col p-8">
         <TextInput
           label="Имя"
           :labelColor="false"
@@ -67,7 +69,7 @@ function showFirstName(params) {
         </button>
       </div>
       <p
-        class="text-center flex flex-col text-gray-900 text-sm text-base font-bold"
+        class="mb-6 text-center flex flex-col text-gray-900 text-sm text-base font-bold"
       >
         Уже есть учетная запись ?
         <router-link class="text-blue-400 hover:underline" to="/SignIn"

@@ -5,12 +5,14 @@ const email = ref(null);
 const password = ref(null);
 </script>
 <template>
-  <div class="w-full p-6 flex justify-center items-centr">
-    <div class="bg-gray-100 p-8 shadow rounded mb-6">
-      <h1 class="mb-6 text-lg text-gray-900 font-bold text-center">
+  <div class="flex justify-center items-centr min-w-min">
+    <div
+      class="w-full sm:w-auto bg-gray-100 mt-0 sm:mt-6 sm:mb-6 shadow rounded"
+    >
+      <h1 class="mb-6 mt-6 text-lg text-gray-900 font-bold text-center">
         Авторизация
       </h1>
-      <div class="mb-4 flex flex-col">
+      <div class="mb-4 flex flex-col p-8">
         <TextInput
           label="Электронная почта"
           :labelColor="false"
@@ -35,10 +37,10 @@ const password = ref(null);
         </button>
       </div>
       <p
-        class="text-center flex flex-col text-gray-900 text-sm text-base font-bold"
+        class="text-center mb-6 flex flex-col text-gray-900 text-sm text-base font-bold"
       >
         Еще не зарегестрированы ?
-        <router-link class="text-blue-400 hover:underline" to="/SignUp"
+        <router-link class="text-blue-400 px-8 hover:underline" to="/SignUp"
           >Зарегестрируйтесь</router-link
         >
       </p>
