@@ -1,9 +1,13 @@
 <template>
-  <div id="AccountVue">
+  <div id="AccountVue" class="max-w-4xl mx-auto">
     <RouterView />
   </div>
 </template>
 
 <script setup></script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+#AccountVue {
+  min-height: 70vh;
+}
+</style>
