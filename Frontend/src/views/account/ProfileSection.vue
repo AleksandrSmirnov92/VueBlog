@@ -1,5 +1,5 @@
 <template>
-  <div class="container max-w-4xl mx-auto flex flex-col sm:flex-row mt-10">
+  <div class="container max-w-4xl mx-auto flex flex-col sm:flex-row">
     <div class="sm:w-1/3 overflow-hidden mt-4">
       <img
         class="w-full rounded-lg h-auto shadow-lg"
@@ -17,8 +17,12 @@
             ><i><b>Moscow,Rus</b></i></span
           >
         </div>
-        <div class="w-full flex justify-center sm:w-1/2 mt-4 mt-2">
-          <my-button btnText="Редактировать текст" btnUrl="" btnColor="green" />
+        <div class="w-full flex justify-center sm:w-1/2 mt-2">
+          <my-button
+            btnText="Редактировать профиль"
+            btnUrl="edit-profile"
+            btnColor="green"
+          />
         </div>
       </div>
       <ProfileInfoSection />

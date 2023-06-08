@@ -4,7 +4,7 @@
       class="container mx-auto max-w-4xl h-full flex flex-wrap justify-between items-start text-sm p-8 pt-8 pb-4"
     >
       <div class="mb-4">
-        <div class="mb-4">Ссылки</div>
+        <div class="mb-4">Быстрая навигация</div>
         <router-link class="block mb-2" to="/">Домой</router-link>
       </div>
       <div class="mb-4">
