@@ -10,7 +10,7 @@
           <div class="flex justify-around sm:justify-end w-full mt-4">
             <my-button
               btnText="Создать пост"
-              btnUrl="account/create-post"
+              btnUrl="/account/create-post"
               btnColor="green"
             />
           </div>
@@ -43,7 +43,7 @@
                 >
                   <router-link
                     class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-1 px-2 rounded-full"
-                    to="#"
+                    to="/account/edit-post"
                     >Редактировать</router-link
                   >
                   <button

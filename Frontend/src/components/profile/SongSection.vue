@@ -9,13 +9,13 @@
         <div class="flex justify-around sm:justify-end w-full mt-4">
           <my-button
             btnText="Удалить песню"
-            btnUrl="account/delete-song"
+            btnUrl="/account/delete-song"
             btnColor="red"
           />
           <my-button
             class="ml-2"
             btnText="Добавить песню"
-            btnUrl="account/add-song"
+            btnUrl="/account/add-song"
             btnColor="green"
           />
         </div>

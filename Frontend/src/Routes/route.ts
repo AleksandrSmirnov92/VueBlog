@@ -5,6 +5,14 @@ import Personal from "../components/Personal.vue";
 import Account from "../views/Account.vue";
 import ProfileSection from "../views/account/ProfileSection.vue";
 import EditProfile from "../components/profile/EditProfile.vue";
+import AddSongVue from "../components/profile/AddSong.vue";
+import DeleteSong from "../components/profile/DeleteSong.vue";
+import AddVideo from "../components/profile/AddVideo.vue";
+import DeleteVideo from "../components/profile/DeleteVideo.vue";
+import CreatePost from "../components/profile/CreatePost.vue";
+import EditPost from "../components/profile/EditPost.vue";
+import PostsPage from "../components/profile/PostsPage.vue";
+import PostById from "../components/profile/PostById.vue";
 const routes = [
   {
     path: "/",
@@ -33,6 +41,46 @@ const routes = [
         path: "edit-profile",
         name: "EditProfile",
         component: EditProfile,
+      },
+      {
+        path: "add-song",
+        name: "AddSong",
+        component: AddSongVue,
+      },
+      {
+        path: "delete-song",
+        name: "DeleteSong",
+        component: DeleteSong,
+      },
+      {
+        path: "add-video",
+        name: "AddVideo",
+        component: AddVideo,
+      },
+      {
+        path: "delete-video",
+        name: "DeleteVideo",
+        component: DeleteVideo,
+      },
+      {
+        path: "create-post",
+        name: "CreatePost",
+        component: CreatePost,
+      },
+      {
+        path: "edit-post",
+        name: "EditPost",
+        component: EditPost,
+      },
+      {
+        path: "posts-page",
+        name: "PostsPage",
+        component: PostsPage,
+      },
+      {
+        path: "post-by-id",
+        name: "PostById",
+        component: PostById,
       },
     ],
   },

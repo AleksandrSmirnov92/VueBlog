@@ -9,13 +9,13 @@
         <div class="flex justify-around sm:justify-end w-full mt-4">
           <my-button
             btnText="Удалить видео"
-            btnUrl="account/delete-video"
+            btnUrl="/account/delete-video"
             btnColor="red"
           />
           <my-button
             class="ml-2"
             btnText="Добавить видео"
-            btnUrl="account/add-video"
+            btnUrl="/account/add-video"
             btnColor="green"
           />
         </div>

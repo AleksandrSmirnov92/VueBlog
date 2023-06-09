@@ -15,12 +15,21 @@
         <p class="text-2xl text-center text-white text-bold">Меню</p>
         <div class="pt-4 text-center">
           <my-button
-            class="w-full text-white text-lg px-7 sm:px-auto"
+            @click="open = !open"
+            class="w-full text-white text-lg px-7 sm:px-auto mb-2"
             btnText="Профиль"
             btnUrl="/account/profile"
             btnColor="green"
           />
+          <my-button
+            @click="open = !open"
+            class="w-full text-white text-lg px-7 sm:px-auto mb-2"
+            btnText="Посты"
+            btnUrl="/account/posts-page"
+            btnColor="green"
+          />
         </div>
+
         <div class="pt-10 sm:mt-4 text-center">
           <my-button
             @click="open = !open"
