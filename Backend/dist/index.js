@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const DB_1 = require("./config/DB");
 const express_1 = __importDefault(require("express"));
+require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
@@ -73,7 +74,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             });
         }
         else {
-            const token = jwt.sign({ _id: data.id }, "secret");
+            const token = jwt.sign({ _id: data.id }, process.env.SECRET_KEY);
             res
                 .status(200)
                 .cookie("jwt", token, {
@@ -91,8 +92,25 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 app.post("/login", login);
 //
 const getProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const cookie = req.cookies["jwt"];
-    res.send(cookie);
+    try {
+        const cookie = req.cookies["jwt"];
+        const user = jwt.verify(cookie, process.env.SECRET_KEY);
+        if (!user) {
+            return res.status(401).json({ message: "Неавторизован" });
+        }
+        res.send(user);
+    }
+    catch (e) {
+        return res.status(401).json({ message: "Неавторизован" });
+    }
 });
 app.get("/profile", getProfile);
+const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Функция выхода
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({
+        message: "SUCCESS delete",
+    });
+});
+app.post("/logout", logout);
 module.exports = app;

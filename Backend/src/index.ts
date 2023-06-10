@@ -1,5 +1,7 @@
 import { supabase } from "./config/DB";
 import express, { Request, Response } from "express";
+require("dotenv").config();
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
@@ -7,6 +9,7 @@ const app = express();
 
 const cors = require("cors");
 const path = require("path");
+
 app.use(express.json());
 app.use(
   cors({
@@ -62,7 +65,7 @@ const login = async (req: Request, res: Response) => {
         message: "Учетные данные не верны",
       });
     } else {
-      const token = jwt.sign({ _id: data.id }, "secret");
+      const token = jwt.sign({ _id: data.id }, process.env.SECRET_KEY);
       res
         .status(200)
         .cookie("jwt", token, {
@@ -81,8 +84,25 @@ app.post("/login", login);
 
 //
 const getProfile = async (req: Request, res: Response) => {
-  const cookie = req.cookies["jwt"];
-  res.send(cookie);
+  try {
+    const cookie = req.cookies["jwt"];
+    const user = jwt.verify(cookie, process.env.SECRET_KEY);
+    if (!user) {
+      return res.status(401).json({ message: "Неавторизован" });
+    }
+    res.send(user);
+  } catch (e) {
+    return res.status(401).json({ message: "Неавторизован" });
+  }
 };
 app.get("/profile", getProfile);
+
+const logout = async (req: Request, res: Response) => {
+  // Функция выхода
+  res.cookie("jwt", "", { maxAge: 0 });
+  res.status(200).json({
+    message: "SUCCESS delete",
+  });
+};
+app.post("/logout", logout);
 module.exports = app;
