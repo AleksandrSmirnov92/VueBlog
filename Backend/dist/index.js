@@ -17,7 +17,7 @@ const express_1 = __importDefault(require("express"));
 const multer = require("multer");
 const express_validator_1 = require("express-validator");
 const { body, validationResult } = require("express-validator");
-const validationCheck = require("../dist/ValidationShema/ValidationLogin.js");
+const validationCheck = require("../dist/ValidationShema/ValidationCheck.js");
 require("dotenv").config();
 const upload = multer();
 const bcrypt = require("bcryptjs");
@@ -149,11 +149,11 @@ app.put("/profile/:id", (req, res) => {
     let { firstName } = req.body;
     console.log(id, firstName);
 });
-app.put("/users/:id", upload.none(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/users/:id", upload.none(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { id } = req.params;
     let formData = req.body;
     let { first_name, last_name, location, description } = formData;
-    console.log(formData);
+    // console.log(formData);
     let updateUser = yield DB_1.supabase
         .from("users")
         .update({
@@ -164,20 +164,22 @@ app.put("/users/:id", upload.none(), (req, res) => __awaiter(void 0, void 0, voi
     })
         .eq("id", id)
         .single();
-    app.get("/users/:id", upload.none(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        let { id } = req.params;
-        // let formData = req.body;
-        // let { first_name, last_name, location, description } = formData;
-        console.log(formData);
-        let { data } = yield DB_1.supabase
-            .from("users")
-            .select("id,first_name", "last_name", "location", "description")
-            .eq("id", id)
-            .single();
-        console.log(data);
-        // res.status(201).json({
-        //   user: data,
-        // });
-    }));
+    res.status(200).json({
+        message: "SUCCESS",
+    });
+}));
+// /////////////////////////////////////
+app.get("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { id } = req.params;
+    console.log(id);
+    let { data } = yield DB_1.supabase
+        .from("users")
+        .select("id, first_name, last_name, location, description")
+        .eq("id", id)
+        .single();
+    console.log(data);
+    res.status(201).json({
+        user: data,
+    });
 }));
 module.exports = app;

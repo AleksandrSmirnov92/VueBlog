@@ -65,9 +65,9 @@
 </template>
 
 <script setup>
+import { useUserStore } from "../../store/user-store";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useUserStore } from "../../store/user-store";
 import axios from "axios";
 import TextInput from "../global/TextInput.vue";
 import TextArea from "../global/TextArea.vue";
@@ -87,12 +87,12 @@ let showModal = ref(false);
 let image = ref(null);
 
 onMounted(() => {
-  userStore.fetchUser();
+  // userStore.fetchUser();
   firstName.value = userStore.firstName || null;
   lastName.value = userStore.lastName || null;
-  lastName.location = userStore.location || null;
-  description.location = userStore.description || null;
-  image.location = userStore.image || null;
+  location.value = userStore.location || null;
+  description.value = userStore.description || null;
+  image.value = userStore.image || null;
 });
 const setCroppedImageData = (data) => {
   // imageData = data;
@@ -105,13 +105,10 @@ const udateProfil = async () => {
   data.append("location", location.value || "");
   data.append("description", description.value || "");
   try {
-    await axios.put("users/" + userStore.id + "?_method=PUT", data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    await axios.post("users/" + userStore.id + "?_method=PUT", data);
     await userStore.fetchUser();
     router.push("/account/profile");
+    console.log("gdddfdf");
   } catch (error) {
     console.log(error);
   }
