@@ -14,7 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const DB_1 = require("./config/DB");
 const express_1 = __importDefault(require("express"));
+const multer = require("multer");
+const express_validator_1 = require("express-validator");
+const { body, validationResult } = require("express-validator");
+const validationCheck = require("../dist/ValidationShema/ValidationLogin.js");
 require("dotenv").config();
+const upload = multer();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
@@ -28,7 +33,7 @@ app.use(cors({
 }));
 app.use(cookieParser());
 app.use(express_1.default.static(path.join(__dirname, "../public")));
-const AuthController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const RegisterController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { firstName, lastName, email, password } = req.body;
     const salt = yield bcrypt.genSalt(10);
     const hashedPassword = yield bcrypt.hash(password, salt);
@@ -43,6 +48,9 @@ const AuthController = (req, res) => __awaiter(void 0, void 0, void 0, function*
         last_name: newUser.lastName,
         email: newUser.email,
         password: newUser.password,
+        image: null,
+        location: null,
+        description: null,
     });
     if (error) {
         console.log(error);
@@ -51,16 +59,31 @@ const AuthController = (req, res) => __awaiter(void 0, void 0, void 0, function*
             message: error.message,
         });
     }
+    let { data } = yield DB_1.supabase
+        .from("users")
+        .select("id,email,password,first_name,last_name")
+        .match({ email: email })
+        .single();
+    // console.log(data);
+    const token = jwt.sign({ _id: data.id }, process.env.SECRET_KEY);
     res.status(200).json({
         status: "SUCCESS",
+        user: data,
+        jwt: token,
     });
 });
-app.post("/register", AuthController);
-const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/register", (0, express_validator_1.check)("firstName", "Ошибка ввода данных").isString().exists(), (0, express_validator_1.check)("lastName", "Ошибка ввода данных").isString().exists(), (0, express_validator_1.check)("password", "Пароль должен быть не меньше 4 символов")
+    .isString()
+    .isLength({ min: 4, max: 10 })
+    .exists(), (0, express_validator_1.check)("email", "Ошибка ввода email")
+    .isEmail({})
+    .isLength({ min: 10, max: 30 })
+    .exists(), validationCheck, RegisterController);
+const LoginController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { email, password } = req.body;
     let { data, error } = yield DB_1.supabase
         .from("users")
-        .select("id,email,password")
+        .select("id,email,password,first_name,last_name")
         .match({ email: email })
         .single();
     if (error) {
@@ -89,7 +112,15 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
 });
-app.post("/login", login);
+app.post("/login", (0, express_validator_1.check)("email", "Ошибка ввода email")
+    .isEmail()
+    .isLength({ min: 10, max: 30 })
+    .exists(), (0, express_validator_1.check)("password", "Пароль должен быть не меньше 4 символов")
+    .isLength({
+    min: 4,
+    max: 10,
+})
+    .exists(), validationCheck, LoginController);
 //
 const getProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -113,4 +144,40 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 app.post("/logout", logout);
+app.put("/profile/:id", (req, res) => {
+    let { id } = req.params;
+    let { firstName } = req.body;
+    console.log(id, firstName);
+});
+app.put("/users/:id", upload.none(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { id } = req.params;
+    let formData = req.body;
+    let { first_name, last_name, location, description } = formData;
+    console.log(formData);
+    let updateUser = yield DB_1.supabase
+        .from("users")
+        .update({
+        first_name: first_name,
+        last_name: last_name,
+        location: location,
+        description: description,
+    })
+        .eq("id", id)
+        .single();
+    app.get("/users/:id", upload.none(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        let { id } = req.params;
+        // let formData = req.body;
+        // let { first_name, last_name, location, description } = formData;
+        console.log(formData);
+        let { data } = yield DB_1.supabase
+            .from("users")
+            .select("id,first_name", "last_name", "location", "description")
+            .eq("id", id)
+            .single();
+        console.log(data);
+        // res.status(201).json({
+        //   user: data,
+        // });
+    }));
+}));
 module.exports = app;

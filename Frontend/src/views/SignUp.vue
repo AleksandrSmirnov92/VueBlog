@@ -1,15 +1,3 @@
-<script setup>
-import TextInput from "../components/global/TextInput.vue";
-import { ref } from "vue";
-const firstName = ref(null);
-const lastName = ref(null);
-const password = ref(null);
-const repeatPassword = ref(null);
-const email = ref(null);
-function showFirstName(params) {
-  console.log(firstName.value);
-}
-</script>
 <template>
   <div id="SignUp" class="flex justify-center items-centr min-w-min">
     <div
@@ -63,7 +51,7 @@ function showFirstName(params) {
         <button
           class="block bg-green-500 w-full text-white py-2 font-bold mt-6 cursor-pointer hover:bg-green-700 rounded-lg"
           type="submit"
-          @click="showFirstName"
+          @click="register"
         >
           Зарегестрироваться
         </button>
@@ -79,5 +67,31 @@ function showFirstName(params) {
     </div>
   </div>
 </template>
-
+<script setup>
+import axios from "axios";
+import TextInput from "../components/global/TextInput.vue";
+import { useUserStore } from "../store/user-store";
+import { ref } from "vue";
+const userStore = useUserStore();
+const errors = ref([]);
+const firstName = ref(null);
+const lastName = ref(null);
+const password = ref(null);
+const repeatPassword = ref(null);
+const email = ref(null);
+const register = async () => {
+  try {
+    const res = await axios.post("http://localhost:9999/register", {
+      firstName: firstName.value,
+      lastName: lastName.value,
+      password: password.value,
+      email: email.value,
+    });
+    console.log(res);
+    userStore.setUserDetails(res);
+  } catch (error) {
+    console.log(error);
+  }
+};
+</script>
 <style scoped></style>

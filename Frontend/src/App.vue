@@ -1,13 +1,13 @@
 <script setup>
-import TopNavigation from "./components/navigation/TopNavigation.vue";
-import FooterMenu from "./components/navigation/FooterMenu.vue";
+// import TopNavigation from "./components/navigation/TopNavigation.vue";
+// import FooterMenu from "./components/navigation/FooterMenu.vue";
 </script>
 
 <template>
   <div>
-    <TopNavigation />
+    <!-- <TopNavigation /> -->
     <RouterView />
-    <FooterMenu />
+    <!-- <FooterMenu /> -->
   </div>
 </template>
 

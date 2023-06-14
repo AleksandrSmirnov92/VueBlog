@@ -51,13 +51,13 @@
         <TextArea
           label="Описание"
           placeholder="Введите сюда информацию"
-          v-model="description"
+          v-model:description="description"
           error="тестовая ошибка"
         />
       </div>
       <div class="flex flex-wrap w-full mt-4 mb-6">
         <div class="w-full px-3">
-          <SubmitFormButton btnText="Обновить профиль" />
+          <SubmitFormButton @click="udateProfil" btnText="Обновить профиль" />
         </div>
       </div>
     </div>
@@ -65,13 +65,19 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "../../store/user-store";
+import axios from "axios";
 import TextInput from "../global/TextInput.vue";
 import TextArea from "../global/TextArea.vue";
 import CropperButton from "../global/CropperButton.vue";
 import SubmitFormButton from "../global/SubmitFormButton.vue";
 import CropperModal from "../global/CropperModal.vue";
 import CropperImage from "../global/CropperImage.vue";
-import { ref } from "vue";
+const router = useRouter();
+const userStore = useUserStore();
+const errors = ref([]);
 let firstName = ref(null);
 let lastName = ref(null);
 let location = ref(null);
@@ -79,9 +85,36 @@ let description = ref(null);
 let showModal = ref(false);
 // let imageData = ref();
 let image = ref(null);
+
+onMounted(() => {
+  userStore.fetchUser();
+  firstName.value = userStore.firstName || null;
+  lastName.value = userStore.lastName || null;
+  lastName.location = userStore.location || null;
+  description.location = userStore.description || null;
+  image.location = userStore.image || null;
+});
 const setCroppedImageData = (data) => {
   // imageData = data;
   image.value = data.imageUrl;
+};
+const udateProfil = async () => {
+  let data = new FormData();
+  data.append("first_name", firstName.value || "");
+  data.append("last_name", lastName.value || "");
+  data.append("location", location.value || "");
+  data.append("description", description.value || "");
+  try {
+    await axios.put("users/" + userStore.id + "?_method=PUT", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    await userStore.fetchUser();
+    router.push("/account/profile");
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>
 

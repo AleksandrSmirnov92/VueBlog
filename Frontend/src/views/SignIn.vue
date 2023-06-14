@@ -1,9 +1,3 @@
-<script setup>
-import TextInput from "../components/global/TextInput.vue";
-import { ref } from "vue";
-const email = ref(null);
-const password = ref(null);
-</script>
 <template>
   <div class="flex justify-center items-centr min-w-min">
     <div
@@ -32,6 +26,7 @@ const password = ref(null);
         <button
           class="block bg-green-500 w-full text-white py-2 font-bold mt-6 cursor-pointer hover:bg-green-700 rounded-lg"
           type="submit"
+          @click="login"
         >
           Войти
         </button>
@@ -47,4 +42,26 @@ const password = ref(null);
     </div>
   </div>
 </template>
+<script setup>
+import TextInput from "../components/global/TextInput.vue";
+import { useUserStore } from "../store/user-store";
+import axios from "axios";
+import { ref } from "vue";
+const userStore = useUserStore();
+const email = ref(null);
+const password = ref(null);
+const errors = ref([]);
+const login = async () => {
+  try {
+    const res = await axios.post("http://localhost:9999/login", {
+      email: email.value,
+      password: password.value,
+    });
+    console.log(res);
+    userStore.setUserDetails(res);
+  } catch (error) {
+    console.log(error);
+  }
+};
+</script>
 <style scoped></style>
