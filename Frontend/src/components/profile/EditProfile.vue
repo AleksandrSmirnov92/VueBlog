@@ -83,11 +83,11 @@ let lastName = ref(null);
 let location = ref(null);
 let description = ref(null);
 let showModal = ref(false);
-// let imageData = ref();
+let imageData = null;
 let image = ref(null);
 
 onMounted(() => {
-  // userStore.fetchUser();
+  userStore.fetchUser();
   firstName.value = userStore.firstName || null;
   lastName.value = userStore.lastName || null;
   location.value = userStore.location || null;
@@ -95,7 +95,7 @@ onMounted(() => {
   image.value = userStore.image || null;
 });
 const setCroppedImageData = (data) => {
-  // imageData = data;
+  imageData = data;
   image.value = data.imageUrl;
 };
 const udateProfil = async () => {
@@ -104,11 +104,20 @@ const udateProfil = async () => {
   data.append("last_name", lastName.value || "");
   data.append("location", location.value || "");
   data.append("description", description.value || "");
+  data.append("image", image.value || "");
+
+  if (imageData) {
+    data.append("image", imageData.file || "");
+    data.append("height", imageData.height || "");
+    data.append("width", imageData.width || "");
+    data.append("left", imageData.left || "");
+    data.append("top", imageData.top || "");
+  }
+
   try {
     await axios.post("users/" + userStore.id + "?_method=PUT", data);
     await userStore.fetchUser();
     router.push("/account/profile");
-    console.log("gdddfdf");
   } catch (error) {
     console.log(error);
   }

@@ -8,7 +8,7 @@ export const useUserStore = defineStore("user", {
     lastName: null,
     email: null,
     location: null,
-    image: null,
+    image: null as any,
     description: null,
   }),
   actions: {
@@ -20,7 +20,7 @@ export const useUserStore = defineStore("user", {
       this.$state.lastName = res.data.user.last_name;
       this.$state.email = res.data.user.email;
       this.$state.location = res.data.user.location;
-      // this.$state.image = res.id.user.image;
+      this.$state.image = res.id.user.image;
       this.$state.description = res.description;
     },
     async fetchUser() {
@@ -30,6 +30,11 @@ export const useUserStore = defineStore("user", {
       this.$state.lastName = res.data.user.last_name;
       this.$state.location = res.data.user.location;
       this.$state.description = res.data.user.description;
+      if (res.data.user.image) {
+        this.$state.image = res.data.user.image;
+      } else {
+        this.$state.image = "../../images/User-avatar.svg.png";
+      }
     },
     async clearUser() {
       const res = await axios;

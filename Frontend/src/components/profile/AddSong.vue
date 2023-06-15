@@ -9,19 +9,19 @@
       placeholder="Напишите заголовок для песни "
       v-model:input="title"
       inputType="text"
-      :error="errors.title ? errors.title[0] : ''"
+      :error="errors ? errors : ''"
     />
 
     <div class="w-full">
       <label
         class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
       >
-        Выбрать изображение
+        Выбрать песню
       </label>
       <input
         class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-400 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
         type="file"
-        id="image"
+        id="song"
         ref="file"
         @change="handleFileUpload"
       />
@@ -33,44 +33,48 @@
 
 <script setup>
 import { ref } from "vue";
+import axios from "axios";
 import TextInput from "../global/TextInput.vue";
 import SubmitFormButton from "../global/SubmitFormButton.vue";
-// import Swal from "../../sweetalert2.js";
-// import { useUserStore } from "@/store/user-store";
+import { useUserStore } from "../../store/user-store";
+const userStore = useUserStore();
+
 // import { useSongStore } from "../../store/song-store";
-// import axios from "axios";
+
 import { useRouter } from "vue-router";
-// const userStore = useUserStore();
+
 // const songStore = useSongStore();
 const router = useRouter();
 let title = ref(null);
 let song = ref(null);
 let file = ref(null);
-let errors = ref([]);
+let errors = ref(null);
 const handleFileUpload = () => {
   song.value = file.value.files[0];
+  console.log(song.value);
 };
 const addSong = async () => {
   if (!song.value) {
-    Swal.fire(
-      "Opps, something went wrong!",
-      "You forgot to upload the mp3 file!",
-      "warning"
-    );
+    alert("Песня не добавлена");
     return null;
   }
   try {
-    let form = new FormData();
-    form.append("user_id", userStore.id);
-    form.append("title", title.value || "");
-    form.append("file", song.value);
-    await axios.post("api/songs", form);
-    songStore.fetchSongsByUserId(userStore.id);
-    setTimeout(() => {
-      router.push("/account/profile/" + userStore.id);
-    }, 200);
+    let data = new FormData();
+    data.append("user_id", userStore.id);
+    data.append("title", title.value || "");
+    data.append("song", song.value);
+    let res = await axios.post("songs", data);
+    console.log(res);
+    if (res.data.status === "SUCCESS") {
+      errors.value = null;
+    }
+
+    // songStore.fetchSongsByUserId(userStore.id);
+    // setTimeout(() => {
+    //   router.push("/account/profile/" + userStore.id);
+    // }, 200);
   } catch (err) {
-    errors.value = err.response.data.errors;
+    errors.value = err.response.data.message;
   }
 };
 </script>

@@ -1,15 +1,17 @@
 <template>
-  <div>
+  <div v-if="image !== '../../images/User-avatar.svg.png'">
     <label
-      class="block uppercase tracking-wide text-xs font-bold mb-2 text-gray-900"
+      class="block mt-4 uppercase tracking-wide text-xs font-bold mb-2 text-gray-900"
     >
       {{ label }}
     </label>
 
-    <img
-      class="rounded w-full border-solid border-4 border-green-500"
-      :src="image"
-    />
+    <div class="w-60 h-60">
+      <img
+        class="rounded w-full border-solid border-4 border-green-500"
+        :src="image !== '../../images/User-avatar.svg.png' ? image : ''"
+      />
+    </div>
   </div>
 </template>
 
