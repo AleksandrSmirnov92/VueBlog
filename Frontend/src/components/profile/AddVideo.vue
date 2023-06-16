@@ -9,6 +9,7 @@
       placeholder="Заголовок для видео"
       v-model:input="title"
       inputType="text"
+      error="тестовая ошибка"
     />
 
     <TextInput
@@ -17,6 +18,7 @@
       placeholder="2VnYXKwneUQ"
       v-model:input="videoCode"
       inputType="text"
+      error="тестовая ошибка"
     />
 
     <SubmitFormButton btnText="Добавить видео" @submit="addYoutubeVideoLink" />
@@ -25,36 +27,30 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import TextInput from "../global/TextInput.vue";
 import SubmitFormButton from "../global/SubmitFormButton.vue";
-// import axios from "axios";
-// import { useUserStore } from "@/store/user-store";
-// import Swal from "../../sweetalert2";
-// import { useRouter } from "vue-router";
-// const router = useRouter();
-// const userStore = useUserStore();
-// let title = ref(null);
-// let videoCode = ref(null);
-// let errors = ref([]);
-// const addYoutubeVideoLink = async () => {
-//   errors.value = [];
-//   try {
-//     await axios.post("api/youtube", {
-//       user_id: userStore.id,
-//       title: title.value,
-//       url: videoCode.value,
-//     });
-//     Swal.fire(
-//       "New video added!",
-//       'You added a video with the name "' + title.value + '"',
-//       "success"
-//     );
-//     router.push("/account/profile/" + userStore.id);
-//   } catch (err) {
-//     errors.value = err.response.data.errors;
-//     console.log("err addYoutubeVideoLink", err);
-//   }
-// };
+import axios from "axios";
+import { useUserStore } from "../../store/user-store";
+const userStore = useUserStore();
+const router = useRouter();
+let title = ref(null);
+let videoCode = ref(null);
+let errors = ref([]);
+const addYoutubeVideoLink = async () => {
+  errors.value = [];
+  try {
+    await axios.post("youtube", {
+      user_id: userStore.id,
+      title: title.value,
+      url: videoCode.value,
+    });
+
+    // router.push("/account/profile/" + userStore.id);
+  } catch (err) {
+    console.log(err);
+  }
+};
 </script>
 
 <style scoped></style>

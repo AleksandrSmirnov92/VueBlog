@@ -36,14 +36,12 @@ import { ref } from "vue";
 import axios from "axios";
 import TextInput from "../global/TextInput.vue";
 import SubmitFormButton from "../global/SubmitFormButton.vue";
-import { useUserStore } from "../../store/user-store";
-const userStore = useUserStore();
-
-// import { useSongStore } from "../../store/song-store";
-
 import { useRouter } from "vue-router";
+import { useUserStore } from "../../store/user-store";
+import { useSongStore } from "../../store/song-store";
+const userStore = useUserStore();
+const songStore = useSongStore();
 
-// const songStore = useSongStore();
 const router = useRouter();
 let title = ref(null);
 let song = ref(null);
@@ -51,7 +49,6 @@ let file = ref(null);
 let errors = ref(null);
 const handleFileUpload = () => {
   song.value = file.value.files[0];
-  console.log(song.value);
 };
 const addSong = async () => {
   if (!song.value) {
@@ -64,15 +61,13 @@ const addSong = async () => {
     data.append("title", title.value || "");
     data.append("song", song.value);
     let res = await axios.post("songs", data);
-    console.log(res);
     if (res.data.status === "SUCCESS") {
       errors.value = null;
+      await songStore.fetchSongsByUserId(userStore.id);
+      setTimeout(() => {
+        router.push("/account/profile");
+      }, 100);
     }
-
-    // songStore.fetchSongsByUserId(userStore.id);
-    // setTimeout(() => {
-    //   router.push("/account/profile/" + userStore.id);
-    // }, 200);
   } catch (err) {
     errors.value = err.response.data.message;
   }

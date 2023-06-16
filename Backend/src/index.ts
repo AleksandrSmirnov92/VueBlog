@@ -7,6 +7,9 @@ const { body, validationResult } = require("express-validator");
 // validation
 const validationCheck = require("../dist/ValidationShema/ValidationCheck.js");
 //  /validation
+// cutUrl
+const cutUrl = require("../dist/helpers/cutUrl.js");
+// /cuturl
 require("dotenv").config();
 const upload = multer({
   limits: { fieldSize: 2 * 1024 * 1024 },
@@ -266,6 +269,7 @@ app.post("/songs", upload.single("song"), async (req: any, res: Response) => {
             user: user_id,
             title: title,
             song: songUrl.data.publicUrl,
+            songName: req.file.originalname,
           })
           .single();
         if (error) {
@@ -285,11 +289,78 @@ app.post("/songs", upload.single("song"), async (req: any, res: Response) => {
 //
 //
 //
-// delete songs
-app.post("/songs/:id", async (req: Request, res: Response) => {
+//  songByUserController
+app.get("/songs/:id", async (req: Request, res: Response) => {
   let { id } = req.params;
-  // найти песню по индетификатору
-  // если песня существует удалить песню
-  // res.status(200).json({message:"Песня удалена"})
+  let { data, error } = await supabase
+    .from("songs")
+    .select("id,user,title,song,songName")
+    .eq("user", id);
+  if (error) {
+    console.log(error);
+    return res.status(404).json({
+      message: error,
+    });
+  }
+  if (data) {
+    return res.status(200).json({
+      songs: data,
+    });
+  }
+});
+// delete songController
+app.delete("/songs/:idUser", async (req: Request, res: Response) => {
+  let { id, songName } = req.body;
+  let { idUser } = req.params;
+  const { data, error } = await supabase.storage
+    .from("songs")
+    .remove([`user_${idUser}/song_${songName}`]);
+  if (error) {
+    console.log(error);
+  }
+  if (data) {
+    const { error } = await supabase.from("songs").delete().eq("id", id);
+    if (error) {
+      console.log(error);
+    }
+    console.log("Песня успешно удаленна");
+    return res.status(200).json({
+      message: "SUCCESS",
+    });
+  }
+});
+
+//add  YouTube video
+app.post("/youtube", async (req: Request, res: Response) => {
+  // https://www.youtube.com/embed/${user_id}/?autoplay=0
+
+  try {
+    let { user_id, title, url } = req.body;
+    // обрезать  c v= до &
+    const currentUrl = `https://www.youtube.com/embed/${cutUrl(
+      url,
+      "v="
+    )}?autoplay=0`;
+    let { error } = await supabase.from("video").insert({
+      user: user_id,
+      title: title,
+      url: currentUrl,
+    });
+    if (error) {
+      console.log(error);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+//get  YouTube video
+app.get("/youtube/:id", (req: Request, res: Response) => {
+  // https://www.youtube.com/embed/${user_id}/?autoplay=0
+  let { user_id, title } = req.body;
+});
+//delete  YouTube video
+app.delete("/youtube/:id", (req: Request, res: Response) => {
+  // https://www.youtube.com/embed/${user_id}/?autoplay=0
+  let { user_id, title } = req.body;
 });
 module.exports = app;

@@ -28,13 +28,22 @@
           class="w-full h-60"
           src="https://www.youtube.com/embed/OFvXuyITwBI?autoplay=0"
         ></iframe>
+        {{ videoStore }}
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { onMounted } from "vue";
 import MyButton from "../global/MyButton.vue";
+import { useVideoStore } from "../../store/video-store";
+import { useUserStore } from "../../store/user-store";
+const videoStore = useVideoStore();
+const userStore = useUserStore();
+onMounted(() => {
+  videoStore.fetchVideo(userStore.id);
+});
 </script>
 
 <style scoped></style>
