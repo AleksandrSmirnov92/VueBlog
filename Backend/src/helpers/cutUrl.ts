@@ -1,6 +1,5 @@
-module.exports = function cutUrl(str: string, char: string) {
-  const escapedChar = char.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const regex = new RegExp(`${escapedChar}(.*)$`);
+module.exports = function cutUrl(str: string) {
+  const regex = /v=([^&]+)/;
   const match = str.match(regex);
   return match ? match[1] : str;
 };

@@ -319,8 +319,7 @@ app.post("/youtube", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     // https://www.youtube.com/embed/${user_id}/?autoplay=0
     try {
         let { user_id, title, url } = req.body;
-        // обрезать  c v= до &
-        const currentUrl = `https://www.youtube.com/embed/${cutUrl(url, "v=")}?autoplay=0`;
+        const currentUrl = `https://www.youtube.com/embed/${cutUrl(url)}?autoplay=0`;
         let { error } = yield DB_1.supabase.from("video").insert({
             user: user_id,
             title: title,

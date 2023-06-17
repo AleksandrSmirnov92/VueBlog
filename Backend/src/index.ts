@@ -336,10 +336,8 @@ app.post("/youtube", async (req: Request, res: Response) => {
 
   try {
     let { user_id, title, url } = req.body;
-    // обрезать  c v= до &
     const currentUrl = `https://www.youtube.com/embed/${cutUrl(
-      url,
-      "v="
+      url
     )}?autoplay=0`;
     let { error } = await supabase.from("video").insert({
       user: user_id,
