@@ -77,69 +77,64 @@ import CropperModal from "../global/CropperModal.vue";
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
+import { usePostStore } from "../../store/post-store";
+import { useUserStore } from "../../store/user-store";
+const postStore = usePostStore();
+const userStore = useUserStore();
 let showModal = ref(false);
 let errors = ref([]);
+let title = ref(null);
+let location = ref(null);
+let description = ref(null);
+let imageData = null;
+let image = ref(null);
+const route = useRoute();
+const router = useRouter();
 
-// import { usePostStore } from "@/store/post-store";
-// import { useUserStore } from "@/store/user-store";
+onMounted(async () => {
+  await getPostById();
+});
+const setCroppedImageData = (data) => {
+  imageData = data;
+  image.value = data.imageUrl;
+};
+const getPostById = async () => {
+  try {
+    let res = await axios.get("post/" + route.params.id);
+    title.value = res.data.post.title;
+    location.value = res.data.post.location;
+    image.value = res.data.post.image;
+    description.value = res.data.post.description;
+  } catch (err) {
+    // обработать ошибки на title,location,description
+    // errors.value = err.response.data.errors;
+    console.log(err);
+  }
+};
+const updatePost = async () => {
+  let data = new FormData();
+  data.append("user_id", userStore.id || "");
+  data.append("title", title.value || "");
+  data.append("location", location.value || "");
+  data.append("description", description.value || "");
+  data.append("image", image.value || "");
 
-// const route = useRoute();
-// const router = useRouter();
-// const postStore = usePostStore();
-// const userStore = useUserStore();
+  if (imageData) {
+    data.append("image", imageData.file || "");
+    data.append("height", imageData.height || "");
+    data.append("width", imageData.width || "");
+    data.append("left", imageData.left || "");
+    data.append("top", imageData.top || "");
+  }
 
-// let title = ref(null);
-// let location = ref(null);
-// let description = ref(null);
-// let imageData = null;
-// let image = ref(null);
-
-// onMounted(async () => {
-//   await getPostById();
-// });
-// const setCroppedImageData = (data) => {
-//   imageData = data;
-//   image.value = data.imageUrl;
-// };
-// const getPostById = async () => {
-//   try {
-//     let res = await axios.get("api/posts/" + route.params.id);
-//     console.log(res);
-//     title.value = res.data.title;
-//     location.value = res.data.location;
-//     image.value = postStore.postImage(res.data.image);
-//     description.value = res.data.description;
-//   } catch (err) {
-//     errors.value = err.response.data.errors;
-//   }
-// };
-// const updatePost = async () => {
-//   errors.value = [];
-//   let data = new FormData();
-//   data.append("title", title.value || "");
-//   data.append("location", location.value || "");
-//   data.append("description", description.value || "");
-//   if (imageData) {
-//     data.append("id", userStore.id || "");
-//     data.append("image", imageData.file || "");
-//     data.append("height", imageData.height || "");
-//     data.append("width", imageData.width || "");
-//     data.append("left", imageData.left || "");
-//     data.append("top", imageData.top || "");
-//   }
-//   try {
-//     await axios.post("api/posts/" + route.params.id + "?_method=PUT", data);
-//     Swal.fire(
-//       "Updated post!",
-//       'The post you update was called "' + title.value + '"',
-//       "success"
-//     );
-//     await postStore.fetchPostsByUserId(userStore.id);
-//     router.push("/account/profile/" + userStore.id);
-//   } catch (err) {
-//     errors.value = err.response.data.errors;
-//   }
-// };
+  try {
+    await axios.post("posts/", data);
+    postStore.fetchPosts(userStore.id);
+    router.push("/account/profile");
+  } catch (error) {
+    console.log(error);
+  }
+};
 </script>
 
 <style scoped></style>

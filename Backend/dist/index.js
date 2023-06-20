@@ -437,12 +437,72 @@ app.get("/posts/:userId", (req, res) => __awaiter(void 0, void 0, void 0, functi
         });
     }
 }));
+app.get("/post/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { id } = req.params;
+    let { data, error } = yield DB_1.supabase
+        .from("posts")
+        .select("id, title, location, description,image,imageName")
+        .eq("id", id)
+        .single();
+    if (error) {
+        console.log(error);
+        res.status(404).json({
+            message: "ERROR",
+        });
+    }
+    if (data) {
+        res.status(200).json({
+            message: "SUCCESS",
+            post: data,
+        });
+    }
+}));
 // updatePost
-// app.put(
-//   "posts/:id",
-//   upload.single("postPhoto"),
-//   (req: any, res: Response) => {}
-// );
+app.put("posts/:id", upload.single("image"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { user_id, title, location, description, left, top, width, height } = req.body;
+    console.log();
+    // let photoUrl;
+    // try {
+    //   if (req.file) {
+    //     let photoBuffer = req.file.buffer;
+    //     const croppedPhotoBuffer = await sharp(photoBuffer)
+    //       .extract({
+    //         left: parseInt(left),
+    //         top: parseInt(top),
+    //         width: parseInt(width),
+    //         height: parseInt(height),
+    //       })
+    //       .toBuffer();
+    //     const { data, error } = await supabase.storage
+    //       .from("posts")
+    //       .upload(
+    //         `user_${user_id}` + "/" + `post_${req.file.originalname}`,
+    //         croppedPhotoBuffer
+    //       );
+    //     photoUrl = supabase.storage
+    //       .from("posts")
+    //       .getPublicUrl(
+    //         `user_${user_id}` + "/" + `post_${req.file.originalname}`
+    //       );
+    //   }
+    //   let updatePost = await supabase
+    //     .from("posts")
+    //     .insert({
+    //       user: user_id,
+    //       title: title,
+    //       location: location,
+    //       description: description,
+    //       image: photoUrl.data.publicUrl,
+    //       imageName: req.file.originalname,
+    //     })
+    //     .single();
+    //   res.status(200).json({
+    //     message: "SUCCESS",
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+}));
 app.delete("/posts/:userId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { id, imageName } = req.body;
     let { userId } = req.params;

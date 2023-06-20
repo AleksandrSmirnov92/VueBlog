@@ -50,7 +50,7 @@
                 >
                   <router-link
                     class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-1 px-2 rounded-full"
-                    to="/account/edit-post"
+                    :to="'/account/edit-post/' + post.id"
                     >Редактировать</router-link
                   >
                   <button
