@@ -316,7 +316,6 @@ app.delete("/songs/:idUser", (req, res) => __awaiter(void 0, void 0, void 0, fun
 }));
 //add  YouTube video
 app.post("/youtube", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // https://www.youtube.com/embed/${user_id}/?autoplay=0
     try {
         let { user_id, title, url } = req.body;
         const currentUrl = `https://www.youtube.com/embed/${cutUrl(url)}?autoplay=0`;
@@ -326,21 +325,142 @@ app.post("/youtube", (req, res) => __awaiter(void 0, void 0, void 0, function* (
             url: currentUrl,
         });
         if (error) {
-            console.log(error);
+            return console.log(error);
         }
+        res.status(200).json({
+            message: "SUCCESS",
+        });
     }
     catch (error) {
         console.log(error);
     }
 }));
 //get  YouTube video
-app.get("/youtube/:id", (req, res) => {
-    // https://www.youtube.com/embed/${user_id}/?autoplay=0
-    let { user_id, title } = req.body;
-});
+app.get("/youtube/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let { id } = req.params;
+        let { data, error } = yield DB_1.supabase
+            .from("video")
+            .select("id,user,title,url")
+            .eq("user", id);
+        if (error) {
+            return res.status(404).json({
+                message: "ERROR",
+                error: error,
+            });
+        }
+        if (data) {
+            res.status(200).json({
+                videos: data,
+            });
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+}));
 //delete  YouTube video
-app.delete("/youtube/:id", (req, res) => {
+app.delete("/youtube/:videoId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // https://www.youtube.com/embed/${user_id}/?autoplay=0
-    let { user_id, title } = req.body;
-});
+    try {
+        let { videoId } = req.params;
+        const { error } = yield DB_1.supabase.from("video").delete().eq("id", videoId);
+        if (error) {
+            console.log(error);
+        }
+        console.log("Видео успешно удаленно");
+        return res.status(200).json({
+            message: "SUCCESS",
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
+}));
+//
+//
+app.post("/posts", upload.single("image"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { user_id, title, location, description, left, top, width, height } = req.body;
+    let photoUrl;
+    try {
+        if (req.file) {
+            let photoBuffer = req.file.buffer;
+            const croppedPhotoBuffer = yield sharp(photoBuffer)
+                .extract({
+                left: parseInt(left),
+                top: parseInt(top),
+                width: parseInt(width),
+                height: parseInt(height),
+            })
+                .toBuffer();
+            const { data, error } = yield DB_1.supabase.storage
+                .from("posts")
+                .upload(`user_${user_id}` + "/" + `post_${req.file.originalname}`, croppedPhotoBuffer);
+            photoUrl = DB_1.supabase.storage
+                .from("posts")
+                .getPublicUrl(`user_${user_id}` + "/" + `post_${req.file.originalname}`);
+        }
+        let updatePost = yield DB_1.supabase
+            .from("posts")
+            .insert({
+            user: user_id,
+            title: title,
+            location: location,
+            description: description,
+            image: photoUrl.data.publicUrl,
+            imageName: req.file.originalname,
+        })
+            .single();
+        res.status(200).json({
+            message: "SUCCESS",
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
+}));
+app.get("/posts/:userId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { userId } = req.params;
+    let { data, error } = yield DB_1.supabase
+        .from("posts")
+        .select("id, title, location, description,image,imageName")
+        .eq("user", userId);
+    if (error) {
+        console.log(error);
+        res.status(404).json({
+            message: "ERROR",
+        });
+    }
+    if (data) {
+        res.status(201).json({
+            posts: data,
+        });
+    }
+}));
+// updatePost
+// app.put(
+//   "posts/:id",
+//   upload.single("postPhoto"),
+//   (req: any, res: Response) => {}
+// );
+app.delete("/posts/:userId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { id, imageName } = req.body;
+    let { userId } = req.params;
+    const { data, error } = yield DB_1.supabase.storage
+        .from("posts")
+        .remove([`user_${userId}/post_${imageName}`]);
+    if (error) {
+        console.log(error);
+    }
+    if (data) {
+        const { error } = yield DB_1.supabase.from("posts").delete().eq("id", id);
+        if (error) {
+            console.log(error);
+        }
+        console.log("Пост успешно удален");
+        return res.status(200).json({
+            message: "SUCCESS",
+        });
+    }
+}));
 module.exports = app;

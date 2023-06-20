@@ -32,7 +32,9 @@ import TextInput from "../global/TextInput.vue";
 import SubmitFormButton from "../global/SubmitFormButton.vue";
 import axios from "axios";
 import { useUserStore } from "../../store/user-store";
+import { useVideoStore } from "../../store/video-store";
 const userStore = useUserStore();
+const videoStore = useVideoStore();
 const router = useRouter();
 let title = ref(null);
 let videoCode = ref(null);
@@ -40,13 +42,14 @@ let errors = ref([]);
 const addYoutubeVideoLink = async () => {
   errors.value = [];
   try {
-    await axios.post("youtube", {
+    let res = await axios.post("youtube", {
       user_id: userStore.id,
       title: title.value,
       url: videoCode.value,
     });
-
-    // router.push("/account/profile/" + userStore.id);
+    if (res.data.message === "SUCCESS") {
+      router.push("/account/profile");
+    }
   } catch (err) {
     console.log(err);
   }

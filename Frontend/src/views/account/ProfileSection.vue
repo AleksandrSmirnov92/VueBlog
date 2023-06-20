@@ -29,7 +29,7 @@
   </div>
   <SongSection />
   <VideoSection />
-  <PoastsSection />
+  <PostsSection />
 </template>
 
 <script setup>
@@ -38,7 +38,7 @@ import ProfileAboutSection from "../../components/profile/ProfileAboutSection.vu
 import MyButton from "../../components/global/MyButton.vue";
 import SongSection from "../../components/profile/SongSection.vue";
 import VideoSection from "../../components/profile/VideoSection.vue";
-import PoastsSection from "../../components/profile/PoastsSection.vue";
+import PostsSection from "../../components/profile/PostsSection.vue";
 import { ref } from "vue";
 import { useUserStore } from "../../store/user-store";
 const userStore = useUserStore();

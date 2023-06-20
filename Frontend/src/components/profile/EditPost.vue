@@ -75,14 +75,14 @@ import CropperButton from "../global/CropperButton.vue";
 import TextInput from "../global/TextInput.vue";
 import CropperModal from "../global/CropperModal.vue";
 import { onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import axios from "axios";
 let showModal = ref(false);
 let errors = ref([]);
-// import { useRoute, useRouter } from "vue-router";
 
 // import { usePostStore } from "@/store/post-store";
 // import { useUserStore } from "@/store/user-store";
-// import axios from "axios";
-// import Swal from "../../sweetalert2";
+
 // const route = useRoute();
 // const router = useRouter();
 // const postStore = usePostStore();

@@ -21,14 +21,10 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-wrap mb-4">
+    <div v-for="video of videoStore.videos" class="flex flex-wrap mb-4">
       <div class="my-1 px-1 w-full md:w-1/2 lg:w-1/2 text-center">
-        <div class="text-xl text-gray-900">Заголовок Видео</div>
-        <iframe
-          class="w-full h-60"
-          src="https://www.youtube.com/embed/OFvXuyITwBI?autoplay=0"
-        ></iframe>
-        {{ videoStore }}
+        <div class="text-xl text-gray-900">{{ video.title }}</div>
+        <iframe class="w-full h-60" :src="video.url"></iframe>
       </div>
     </div>
   </div>

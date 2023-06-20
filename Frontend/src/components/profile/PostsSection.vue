@@ -16,28 +16,35 @@
           </div>
         </div>
         <div class="flex flex-wrap mb-4">
-          <div class="my-1 px-1 w-full md:w-1/2 lg:w-1/2 text-center">
+          <div
+            v-for="post in postStore.posts"
+            :key="post"
+            class="my-1 px-1 w-full md:w-1/2 lg:w-1/2 text-center"
+          >
             <div class="bg-white sm:border">
-              <div class="w-full flex justify-center sm:justify-start">
-                <a href="#" class="pt-4 sm:pl-4 w-16">
+              <div class="flex justify-center items-center py-2">
+                <router-link
+                  :to="'/account/profile/' + post.id"
+                  class="rounded-full"
+                  width="50"
+                >
                   <img
-                    class="border rounded-lg h-auto w-16"
-                    src="../../../images/ImPhoto.jpeg"
+                    class="border rounded-lg h-28 w-full"
+                    :src="post.image"
                     alt=""
                   />
-                </a>
+                </router-link>
               </div>
-
               <div class="p-2 md:p-4">
                 <div class="text-lg">
                   <router-link
                     class="underline text-blue-500 hover:text-blue-600"
-                    to=""
-                    >Название теста</router-link
+                    :to="'/account/post-by-id/' + post.id"
+                    >{{ post.title }}</router-link
                   >
                 </div>
-                <p class="py-2">место для тестирования</p>
-                <p class="text-gray-darker text-md">Фиктивный текст</p>
+                <p class="py-2">Локация:{{ post.location }}</p>
+                <p class="text-gray-darker text-md">{{ post.description }}</p>
                 <div
                   class="mt-2 flex item-center justify-around sm:justify-end"
                 >
@@ -48,7 +55,7 @@
                   >
                   <button
                     class="bg-red-500 hover:bg-red-700 text-white text-sm font-bold py-1 px-2 rounded-full cursor-pointer"
-                    to=""
+                    @click="deletePost(post)"
                   >
                     Удалить
                   </button>
@@ -64,6 +71,17 @@
 
 <script setup>
 import MyButton from "../global/MyButton.vue";
+import { usePostStore } from "../../store/post-store";
+import { useUserStore } from "../../store/user-store";
+import axios from "axios";
+import { onMounted } from "vue";
+const postStore = usePostStore();
+const userStore = useUserStore();
+const deletePost = async (post) => {
+  let res = await axios.delete("posts/" + userStore.id, { data: post });
+  await postStore.fetchPosts(userStore.id);
+  alert("Пост успешно удален");
+};
 </script>
 
 <style scoped></style>

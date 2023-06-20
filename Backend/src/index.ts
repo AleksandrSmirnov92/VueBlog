@@ -332,8 +332,6 @@ app.delete("/songs/:idUser", async (req: Request, res: Response) => {
 
 //add  YouTube video
 app.post("/youtube", async (req: Request, res: Response) => {
-  // https://www.youtube.com/embed/${user_id}/?autoplay=0
-
   try {
     let { user_id, title, url } = req.body;
     const currentUrl = `https://www.youtube.com/embed/${cutUrl(
@@ -345,20 +343,148 @@ app.post("/youtube", async (req: Request, res: Response) => {
       url: currentUrl,
     });
     if (error) {
-      console.log(error);
+      return console.log(error);
     }
+    res.status(200).json({
+      message: "SUCCESS",
+    });
   } catch (error) {
     console.log(error);
   }
 });
 //get  YouTube video
-app.get("/youtube/:id", (req: Request, res: Response) => {
-  // https://www.youtube.com/embed/${user_id}/?autoplay=0
-  let { user_id, title } = req.body;
+app.get("/youtube/:id", async (req: Request, res: Response) => {
+  try {
+    let { id } = req.params;
+    let { data, error } = await supabase
+      .from("video")
+      .select("id,user,title,url")
+      .eq("user", id);
+    if (error) {
+      return res.status(404).json({
+        message: "ERROR",
+        error: error,
+      });
+    }
+    if (data) {
+      res.status(200).json({
+        videos: data,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
 });
 //delete  YouTube video
-app.delete("/youtube/:id", (req: Request, res: Response) => {
+app.delete("/youtube/:videoId", async (req: Request, res: Response) => {
   // https://www.youtube.com/embed/${user_id}/?autoplay=0
-  let { user_id, title } = req.body;
+  try {
+    let { videoId } = req.params;
+    const { error } = await supabase.from("video").delete().eq("id", videoId);
+    if (error) {
+      console.log(error);
+    }
+    console.log("Видео успешно удаленно");
+    return res.status(200).json({
+      message: "SUCCESS",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//
+//
+app.post("/posts", upload.single("image"), async (req: any, res: Response) => {
+  let { user_id, title, location, description, left, top, width, height } =
+    req.body;
+  let photoUrl;
+  try {
+    if (req.file) {
+      let photoBuffer = req.file.buffer;
+      const croppedPhotoBuffer = await sharp(photoBuffer)
+        .extract({
+          left: parseInt(left),
+          top: parseInt(top),
+          width: parseInt(width),
+          height: parseInt(height),
+        })
+        .toBuffer();
+
+      const { data, error } = await supabase.storage
+        .from("posts")
+        .upload(
+          `user_${user_id}` + "/" + `post_${req.file.originalname}`,
+          croppedPhotoBuffer
+        );
+      photoUrl = supabase.storage
+        .from("posts")
+        .getPublicUrl(
+          `user_${user_id}` + "/" + `post_${req.file.originalname}`
+        );
+    }
+
+    let updatePost = await supabase
+      .from("posts")
+      .insert({
+        user: user_id,
+        title: title,
+        location: location,
+        description: description,
+        image: photoUrl.data.publicUrl,
+        imageName: req.file.originalname,
+      })
+      .single();
+    res.status(200).json({
+      message: "SUCCESS",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get("/posts/:userId", async (req: Request, res: Response) => {
+  let { userId } = req.params;
+  let { data, error } = await supabase
+    .from("posts")
+    .select("id, title, location, description,image,imageName")
+    .eq("user", userId);
+  if (error) {
+    console.log(error);
+    res.status(404).json({
+      message: "ERROR",
+    });
+  }
+  if (data) {
+    res.status(201).json({
+      posts: data,
+    });
+  }
+});
+// updatePost
+// app.put(
+//   "posts/:id",
+//   upload.single("postPhoto"),
+//   (req: any, res: Response) => {}
+// );
+app.delete("/posts/:userId", async (req: Request, res: Response) => {
+  let { id, imageName } = req.body;
+  let { userId } = req.params;
+  const { data, error } = await supabase.storage
+    .from("posts")
+    .remove([`user_${userId}/post_${imageName}`]);
+  if (error) {
+    console.log(error);
+  }
+  if (data) {
+    const { error } = await supabase.from("posts").delete().eq("id", id);
+    if (error) {
+      console.log(error);
+    }
+    console.log("Пост успешно удален");
+    return res.status(200).json({
+      message: "SUCCESS",
+    });
+  }
 });
 module.exports = app;
