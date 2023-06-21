@@ -103,7 +103,7 @@ const createPost = async () => {
     data.append("image", imageData.file || "");
     data.append("height", imageData.height || "");
     data.append("width", imageData.width || "");
-    data.append("left", imageData.left || "");
+    data.append("left", imageData.left || 0);
     data.append("top", imageData.top || "");
   }
 

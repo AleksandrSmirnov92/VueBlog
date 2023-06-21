@@ -88,6 +88,7 @@ let location = ref(null);
 let description = ref(null);
 let imageData = null;
 let image = ref(null);
+let imageName = ref(null);
 const route = useRoute();
 const router = useRouter();
 
@@ -101,10 +102,14 @@ const setCroppedImageData = (data) => {
 const getPostById = async () => {
   try {
     let res = await axios.get("post/" + route.params.id);
-    title.value = res.data.post.title;
-    location.value = res.data.post.location;
-    image.value = res.data.post.image;
-    description.value = res.data.post.description;
+    if (res.data.message === "SUCCESS") {
+      console.log(res.data.post.image);
+      title.value = res.data.post.title;
+      location.value = res.data.post.location;
+      image.value = res.data.post.image;
+      description.value = res.data.post.description;
+      imageName.value = res.data.post.imageName;
+    }
   } catch (err) {
     // обработать ошибки на title,location,description
     // errors.value = err.response.data.errors;
@@ -118,18 +123,20 @@ const updatePost = async () => {
   data.append("location", location.value || "");
   data.append("description", description.value || "");
   data.append("image", image.value || "");
+  data.append("imageName", imageName.value || "");
 
   if (imageData) {
     data.append("image", imageData.file || "");
     data.append("height", imageData.height || "");
     data.append("width", imageData.width || "");
-    data.append("left", imageData.left || "");
+    data.append("left", imageData.left || 0);
     data.append("top", imageData.top || "");
   }
 
   try {
-    await axios.post("posts/", data);
-    postStore.fetchPosts(userStore.id);
+    console.log(image.value);
+    await axios.post("posts/" + route.params.id + "?_method=PUT", data);
+    await postStore.fetchPosts(userStore.id);
     router.push("/account/profile");
   } catch (error) {
     console.log(error);

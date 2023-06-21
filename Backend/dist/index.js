@@ -382,6 +382,7 @@ app.delete("/youtube/:videoId", (req, res) => __awaiter(void 0, void 0, void 0, 
 app.post("/posts", upload.single("image"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { user_id, title, location, description, left, top, width, height } = req.body;
     let photoUrl;
+    let random = Math.random();
     try {
         if (req.file) {
             let photoBuffer = req.file.buffer;
@@ -395,10 +396,10 @@ app.post("/posts", upload.single("image"), (req, res) => __awaiter(void 0, void 
                 .toBuffer();
             const { data, error } = yield DB_1.supabase.storage
                 .from("posts")
-                .upload(`user_${user_id}` + "/" + `post_${req.file.originalname}`, croppedPhotoBuffer);
+                .upload(`user_${user_id}` + "/" + `post_${req.file.originalname}_${random}`, croppedPhotoBuffer);
             photoUrl = DB_1.supabase.storage
                 .from("posts")
-                .getPublicUrl(`user_${user_id}` + "/" + `post_${req.file.originalname}`);
+                .getPublicUrl(`user_${user_id}` + "/" + `post_${req.file.originalname}_${random}`);
         }
         let updatePost = yield DB_1.supabase
             .from("posts")
@@ -408,7 +409,7 @@ app.post("/posts", upload.single("image"), (req, res) => __awaiter(void 0, void 
             location: location,
             description: description,
             image: photoUrl.data.publicUrl,
-            imageName: req.file.originalname,
+            imageName: `${req.file.originalname}_${random}`,
         })
             .single();
         res.status(200).json({
@@ -421,9 +422,26 @@ app.post("/posts", upload.single("image"), (req, res) => __awaiter(void 0, void 
 }));
 app.get("/posts/:userId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { userId } = req.params;
+    if (req.query.page !== "0") {
+        let count = yield DB_1.supabase.from("posts").select("*").eq("user", userId);
+        let { data, error } = yield DB_1.supabase
+            .from("posts")
+            .select("id, title, location, description,image,imageName, users (id,first_name,last_name,image)")
+            .eq("user", userId)
+            .range(req.query.prePage, Number(req.query.page) - 1);
+        if (error) {
+            console.log(error);
+        }
+        if (data) {
+            return res.status(201).json({
+                posts: data,
+                page_count: count.data.length,
+            });
+        }
+    }
     let { data, error } = yield DB_1.supabase
         .from("posts")
-        .select("id, title, location, description,image,imageName")
+        .select("id, title, location, description,image,imageName, users (id,first_name,last_name,image)")
         .eq("user", userId);
     if (error) {
         console.log(error);
@@ -432,8 +450,9 @@ app.get("/posts/:userId", (req, res) => __awaiter(void 0, void 0, void 0, functi
         });
     }
     if (data) {
-        res.status(201).json({
+        return res.status(201).json({
             posts: data,
+            page_count: data.length,
         });
     }
 }));
@@ -441,7 +460,7 @@ app.get("/post/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     let { id } = req.params;
     let { data, error } = yield DB_1.supabase
         .from("posts")
-        .select("id, title, location, description,image,imageName")
+        .select("id, title, location, description,image,imageName, users (id,first_name,last_name,image)")
         .eq("id", id)
         .single();
     if (error) {
@@ -458,50 +477,53 @@ app.get("/post/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 }));
 // updatePost
-app.put("posts/:id", upload.single("image"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let { user_id, title, location, description, left, top, width, height } = req.body;
-    console.log();
-    // let photoUrl;
-    // try {
-    //   if (req.file) {
-    //     let photoBuffer = req.file.buffer;
-    //     const croppedPhotoBuffer = await sharp(photoBuffer)
-    //       .extract({
-    //         left: parseInt(left),
-    //         top: parseInt(top),
-    //         width: parseInt(width),
-    //         height: parseInt(height),
-    //       })
-    //       .toBuffer();
-    //     const { data, error } = await supabase.storage
-    //       .from("posts")
-    //       .upload(
-    //         `user_${user_id}` + "/" + `post_${req.file.originalname}`,
-    //         croppedPhotoBuffer
-    //       );
-    //     photoUrl = supabase.storage
-    //       .from("posts")
-    //       .getPublicUrl(
-    //         `user_${user_id}` + "/" + `post_${req.file.originalname}`
-    //       );
-    //   }
-    //   let updatePost = await supabase
-    //     .from("posts")
-    //     .insert({
-    //       user: user_id,
-    //       title: title,
-    //       location: location,
-    //       description: description,
-    //       image: photoUrl.data.publicUrl,
-    //       imageName: req.file.originalname,
-    //     })
-    //     .single();
-    //   res.status(200).json({
-    //     message: "SUCCESS",
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+app.post("/posts/:id", upload.single("image"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { user_id, title, location, description, left, top, width, height, image, imageName, } = req.body;
+    let { id } = req.params;
+    let photoUrl;
+    let random = Math.random();
+    try {
+        if (req.file) {
+            let photoBuffer = req.file.buffer;
+            const croppedPhotoBuffer = yield sharp(photoBuffer)
+                .extract({
+                left: parseInt(left),
+                top: parseInt(top),
+                width: parseInt(width),
+                height: parseInt(height),
+            })
+                .toBuffer();
+            const { data, error } = yield DB_1.supabase.storage
+                .from("posts")
+                .upload(`user_${user_id}` + "/" + `post_${req.file.originalname}_${random}`, croppedPhotoBuffer);
+            if (error) {
+                console.log(error);
+            }
+            photoUrl = DB_1.supabase.storage
+                .from("posts")
+                .getPublicUrl(`user_${user_id}` + "/" + `post_${req.file.originalname}_${random}`);
+        }
+        let updatePost = yield DB_1.supabase
+            .from("posts")
+            .update({
+            user: user_id,
+            title: title,
+            location: location,
+            description: description,
+            image: photoUrl !== undefined ? photoUrl.data.publicUrl : image,
+            imageName: req.file !== undefined
+                ? `${req.file.originalname}_${random}`
+                : imageName,
+        })
+            .eq("id", id)
+            .single();
+        res.status(200).json({
+            message: "SUCCESS",
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
 }));
 app.delete("/posts/:userId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { id, imageName } = req.body;

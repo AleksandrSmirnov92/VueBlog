@@ -3,6 +3,7 @@ import express, { Request, Response } from "express";
 const multer = require("multer");
 const sharp = require("sharp");
 import { check } from "express-validator";
+import { equal, notDeepStrictEqual } from "assert";
 const { body, validationResult } = require("express-validator");
 // validation
 const validationCheck = require("../dist/ValidationShema/ValidationCheck.js");
@@ -399,6 +400,7 @@ app.post("/posts", upload.single("image"), async (req: any, res: Response) => {
   let { user_id, title, location, description, left, top, width, height } =
     req.body;
   let photoUrl;
+  let random = Math.random();
   try {
     if (req.file) {
       let photoBuffer = req.file.buffer;
@@ -414,13 +416,13 @@ app.post("/posts", upload.single("image"), async (req: any, res: Response) => {
       const { data, error } = await supabase.storage
         .from("posts")
         .upload(
-          `user_${user_id}` + "/" + `post_${req.file.originalname}`,
+          `user_${user_id}` + "/" + `post_${req.file.originalname}_${random}`,
           croppedPhotoBuffer
         );
       photoUrl = supabase.storage
         .from("posts")
         .getPublicUrl(
-          `user_${user_id}` + "/" + `post_${req.file.originalname}`
+          `user_${user_id}` + "/" + `post_${req.file.originalname}_${random}`
         );
     }
 
@@ -432,7 +434,8 @@ app.post("/posts", upload.single("image"), async (req: any, res: Response) => {
         location: location,
         description: description,
         image: photoUrl.data.publicUrl,
-        imageName: req.file.originalname,
+
+        imageName: `${req.file.originalname}_${random}`,
       })
       .single();
     res.status(200).json({
@@ -445,9 +448,31 @@ app.post("/posts", upload.single("image"), async (req: any, res: Response) => {
 
 app.get("/posts/:userId", async (req: Request, res: Response) => {
   let { userId } = req.params;
+
+  if (req.query.page !== "0") {
+    let count = await supabase.from("posts").select("*").eq("user", userId);
+    let { data, error } = await supabase
+      .from("posts")
+      .select(
+        "id, title, location, description,image,imageName, users (id,first_name,last_name,image)"
+      )
+      .eq("user", userId)
+      .range(req.query.prePage, Number(req.query.page) - 1);
+    if (error) {
+      console.log(error);
+    }
+    if (data) {
+      return res.status(201).json({
+        posts: data,
+        page_count: count.data.length,
+      });
+    }
+  }
   let { data, error } = await supabase
     .from("posts")
-    .select("id, title, location, description,image,imageName")
+    .select(
+      "id, title, location, description,image,imageName, users (id,first_name,last_name,image)"
+    )
     .eq("user", userId);
   if (error) {
     console.log(error);
@@ -456,8 +481,9 @@ app.get("/posts/:userId", async (req: Request, res: Response) => {
     });
   }
   if (data) {
-    res.status(201).json({
+    return res.status(201).json({
       posts: data,
+      page_count: data.length,
     });
   }
 });
@@ -465,7 +491,9 @@ app.get("/post/:id", async (req: Request, res: Response) => {
   let { id } = req.params;
   let { data, error } = await supabase
     .from("posts")
-    .select("id, title, location, description,image,imageName")
+    .select(
+      "id, title, location, description,image,imageName, users (id,first_name,last_name,image)"
+    )
     .eq("id", id)
     .single();
   if (error) {
@@ -481,57 +509,75 @@ app.get("/post/:id", async (req: Request, res: Response) => {
     });
   }
 });
+
 // updatePost
-app.put(
-  "posts/:id",
+app.post(
+  "/posts/:id",
   upload.single("image"),
   async (req: any, res: Response) => {
-    let { user_id, title, location, description, left, top, width, height } =
-      req.body;
-    console.log();
-    // let photoUrl;
-    // try {
-    //   if (req.file) {
-    //     let photoBuffer = req.file.buffer;
-    //     const croppedPhotoBuffer = await sharp(photoBuffer)
-    //       .extract({
-    //         left: parseInt(left),
-    //         top: parseInt(top),
-    //         width: parseInt(width),
-    //         height: parseInt(height),
-    //       })
-    //       .toBuffer();
+    let {
+      user_id,
+      title,
+      location,
+      description,
+      left,
+      top,
+      width,
+      height,
+      image,
+      imageName,
+    } = req.body;
+    let { id } = req.params;
+    let photoUrl;
+    let random = Math.random();
+    try {
+      if (req.file) {
+        let photoBuffer = req.file.buffer;
+        const croppedPhotoBuffer = await sharp(photoBuffer)
+          .extract({
+            left: parseInt(left),
+            top: parseInt(top),
+            width: parseInt(width),
+            height: parseInt(height),
+          })
+          .toBuffer();
 
-    //     const { data, error } = await supabase.storage
-    //       .from("posts")
-    //       .upload(
-    //         `user_${user_id}` + "/" + `post_${req.file.originalname}`,
-    //         croppedPhotoBuffer
-    //       );
-    //     photoUrl = supabase.storage
-    //       .from("posts")
-    //       .getPublicUrl(
-    //         `user_${user_id}` + "/" + `post_${req.file.originalname}`
-    //       );
-    //   }
-
-    //   let updatePost = await supabase
-    //     .from("posts")
-    //     .insert({
-    //       user: user_id,
-    //       title: title,
-    //       location: location,
-    //       description: description,
-    //       image: photoUrl.data.publicUrl,
-    //       imageName: req.file.originalname,
-    //     })
-    //     .single();
-    //   res.status(200).json({
-    //     message: "SUCCESS",
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+        const { data, error } = await supabase.storage
+          .from("posts")
+          .upload(
+            `user_${user_id}` + "/" + `post_${req.file.originalname}_${random}`,
+            croppedPhotoBuffer
+          );
+        if (error) {
+          console.log(error);
+        }
+        photoUrl = supabase.storage
+          .from("posts")
+          .getPublicUrl(
+            `user_${user_id}` + "/" + `post_${req.file.originalname}_${random}`
+          );
+      }
+      let updatePost = await supabase
+        .from("posts")
+        .update({
+          user: user_id,
+          title: title,
+          location: location,
+          description: description,
+          image: photoUrl !== undefined ? photoUrl.data.publicUrl : image,
+          imageName:
+            req.file !== undefined
+              ? `${req.file.originalname}_${random}`
+              : imageName,
+        })
+        .eq("id", id)
+        .single();
+      res.status(200).json({
+        message: "SUCCESS",
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 app.delete("/posts/:userId", async (req: Request, res: Response) => {

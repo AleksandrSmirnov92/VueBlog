@@ -10,10 +10,10 @@
 </template>
 
 <script setup>
-import { useUserStore } from "../../store/user-store";
-const userStore = useUserStore();
+import { useProfileStore } from "../../store/profile-store";
+const profileStore = useProfileStore();
 import { ref } from "vue";
-const description = ref(userStore.description);
+const description = ref(profileStore.description);
 </script>
 
 <style lang="scss" scoped></style>

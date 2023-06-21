@@ -18,14 +18,14 @@
             @click="open = !open"
             class="w-full text-white text-lg px-7 sm:px-auto mb-2"
             btnText="Профиль"
-            btnUrl="/account/profile"
+            :btnUrl="`/account/profile/` + userStore.id"
             btnColor="green"
           />
           <my-button
             @click="open = !open"
             class="w-full text-white text-lg px-7 sm:px-auto mb-2"
             btnText="Посты"
-            btnUrl="/account/posts-page"
+            :btnUrl="'/account/posts-page/' + userStore.id"
             btnColor="green"
           />
         </div>
@@ -46,6 +46,8 @@
 <script setup>
 import MyButton from "../global/MyButton.vue";
 import { ref } from "vue";
+import { useUserStore } from "../../store/user-store";
+const userStore = useUserStore();
 const open = ref(false);
 </script>
 

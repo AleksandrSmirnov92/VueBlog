@@ -33,7 +33,7 @@ const routes = [
     component: Account,
     children: [
       {
-        path: "profile",
+        path: "profile/:id",
         name: "profile",
         component: ProfileSection,
       },
@@ -73,12 +73,12 @@ const routes = [
         component: EditPost,
       },
       {
-        path: "posts-page",
+        path: "posts-page/:id",
         name: "PostsPage",
         component: PostsPage,
       },
       {
-        path: "post-by-id",
+        path: "post-by-id/:id",
         name: "PostById",
         component: PostById,
       },

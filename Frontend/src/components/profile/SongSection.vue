@@ -6,7 +6,10 @@
       >
         <div class="text-gray-900 text-xl">Песни</div>
         <div class="bg-green-500 w-full h-1"></div>
-        <div class="flex justify-around sm:justify-end w-full mt-4">
+        <div
+          class="flex justify-around sm:justify-end w-full mt-4"
+          v-if="userStore.id == route.params.id"
+        >
           <my-button
             btnText="Удалить песню"
             btnUrl="/account/delete-song"
@@ -26,8 +29,12 @@
 </template>
 
 <script setup>
+import { useRoute } from "vue-router";
 import MyButton from "../global/MyButton.vue";
 import SongPlayer from "../profile/SongPlayer.vue";
+import { useUserStore } from "../../store/user-store";
+const userStore = useUserStore();
+const route = useRoute();
 </script>
 
 <style scoped></style>

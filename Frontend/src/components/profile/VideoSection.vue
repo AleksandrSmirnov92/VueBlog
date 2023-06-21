@@ -6,7 +6,10 @@
       >
         <div class="text-gray-900 text-xl">Видео с YouTube</div>
         <div class="bg-green-500 w-full h-1"></div>
-        <div class="flex justify-around sm:justify-end w-full mt-4">
+        <div
+          class="flex justify-around sm:justify-end w-full mt-4"
+          v-if="userStore.id == route.params.id"
+        >
           <my-button
             btnText="Удалить видео"
             btnUrl="/account/delete-video"
@@ -31,12 +34,14 @@
 </template>
 
 <script setup>
+import { useRoute } from "vue-router";
 import { onMounted } from "vue";
 import MyButton from "../global/MyButton.vue";
 import { useVideoStore } from "../../store/video-store";
 import { useUserStore } from "../../store/user-store";
 const videoStore = useVideoStore();
 const userStore = useUserStore();
+const route = useRoute();
 onMounted(() => {
   videoStore.fetchVideo(userStore.id);
 });

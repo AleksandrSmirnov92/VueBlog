@@ -7,7 +7,10 @@
         >
           <div class="text-gray-900 text-xl">Создать пост</div>
           <div class="bg-green-500 w-full h-1"></div>
-          <div class="flex justify-around sm:justify-end w-full mt-4">
+          <div
+            class="flex justify-around sm:justify-end w-full mt-4"
+            v-if="userStore.id == route.params.id"
+          >
             <my-button
               btnText="Создать пост"
               btnUrl="/account/create-post"
@@ -46,6 +49,7 @@
                 <p class="py-2">Локация:{{ post.location }}</p>
                 <p class="text-gray-darker text-md">{{ post.description }}</p>
                 <div
+                  v-if="userStore.id == route.params.id"
                   class="mt-2 flex item-center justify-around sm:justify-end"
                 >
                   <router-link
@@ -70,6 +74,8 @@
 </template>
 
 <script setup>
+import { useRoute } from "vue-router";
+const route = useRoute();
 import MyButton from "../global/MyButton.vue";
 import { usePostStore } from "../../store/post-store";
 import { useUserStore } from "../../store/user-store";
@@ -77,6 +83,9 @@ import axios from "axios";
 import { onMounted } from "vue";
 const postStore = usePostStore();
 const userStore = useUserStore();
+onMounted(() => {
+  postStore.fetchPosts(route.params.id);
+});
 const deletePost = async (post) => {
   let res = await axios.delete("posts/" + userStore.id, { data: post });
   await postStore.fetchPosts(userStore.id);
