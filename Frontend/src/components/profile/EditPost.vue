@@ -137,7 +137,7 @@ const updatePost = async () => {
     console.log(image.value);
     await axios.post("posts/" + route.params.id + "?_method=PUT", data);
     await postStore.fetchPosts(userStore.id);
-    router.push("/account/profile");
+    router.push("/" + userStore.id);
   } catch (error) {
     console.log(error);
   }

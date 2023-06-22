@@ -48,7 +48,7 @@ const addYoutubeVideoLink = async () => {
       url: videoCode.value,
     });
     if (res.data.message === "SUCCESS") {
-      router.push("/account/profile");
+      router.push("/account/profile/" + userStore.id);
     }
   } catch (err) {
     console.log(err);

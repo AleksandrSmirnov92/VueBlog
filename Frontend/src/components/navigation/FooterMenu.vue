@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full bg-black text-gray-100">
-    <div
+  <div class="w-full bg-black text-gray-100 h-60">
+    <!-- <div
       class="container mx-auto max-w-4xl h-full flex flex-wrap justify-between items-start text-sm p-8 pt-8 pb-4"
     >
       <div class="mb-4">
@@ -21,7 +21,7 @@
       <div class="no-underline hover:underline">Политика Конфициальности</div>
       <div class="no-underline hover:underline mt-4">Правила и условия</div>
       <div class="no-underline hover:underline mt-4">Свяжись со мной</div>
-    </div>
+    </div> -->
   </div>
 </template>
 

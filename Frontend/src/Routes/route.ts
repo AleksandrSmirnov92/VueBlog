@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useUserStore } from "../store/user-store";
+
 import SignUp from "../views/SignUp.vue";
 import SignIn from "../views/SignIn.vue";
 import Personal from "../components/Personal.vue";
@@ -21,15 +23,29 @@ const routes = [
   },
   {
     path: "/SignUp",
+    beforeEnter: (to: any, from: any, next: any) => {
+      useUserStore().id
+        ? next("/account/profile/" + useUserStore().id)
+        : next();
+    },
+    name: "SignUp",
     component: SignUp,
   },
   {
     path: "/SignIn",
+    beforeEnter: (to: any, from: any, next: any) => {
+      useUserStore().id
+        ? next("/account/profile/" + useUserStore().id)
+        : next();
+    },
     name: "SignIn",
     component: SignIn,
   },
   {
     path: "/account",
+    beforeEnter: (to: any, from: any, next: any) => {
+      useUserStore().id ? next() : next("/SignIn");
+    },
     component: Account,
     children: [
       {

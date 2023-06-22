@@ -33,8 +33,14 @@ import { useRoute } from "vue-router";
 import MyButton from "../global/MyButton.vue";
 import SongPlayer from "../profile/SongPlayer.vue";
 import { useUserStore } from "../../store/user-store";
+import { useSongStore } from "../../store/song-store";
+import { onMounted } from "vue";
+const songStore = useSongStore();
 const userStore = useUserStore();
 const route = useRoute();
+onMounted(async () => {
+  await songStore.fetchSongsByUserId(route.params.id);
+});
 </script>
 
 <style scoped></style>

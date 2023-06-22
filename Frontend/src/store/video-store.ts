@@ -9,7 +9,7 @@ export const useVideoStore = defineStore("video", {
       const res = await axios.get("youtube/" + user_id);
       this.$state.videos = res.data.videos;
     },
-    async clearVideos() {
+    clearVideos() {
       this.$state.videos = null;
     },
   },

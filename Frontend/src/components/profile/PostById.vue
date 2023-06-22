@@ -6,11 +6,11 @@
     <div class="mx-auto">
       <div class="my-4">
         <div class="flex items-center py-2">
-          <router-link :to="'/account/profile/'">
+          <router-link :to="'/account/profile/' + userStore.id">
             <img :src="post.users.image" class="rounded-full" width="50" />
           </router-link>
           <div class="ml-2 font-bold text-2xl">
-            <router-link :to="'/account/profile/'">
+            <router-link :to="'/account/profile/' + userStore.id">
               {{ post.users.first_name }} {{ post.users.last_name }}
             </router-link>
           </div>

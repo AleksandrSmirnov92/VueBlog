@@ -42,8 +42,8 @@ import { useUserStore } from "../../store/user-store";
 const videoStore = useVideoStore();
 const userStore = useUserStore();
 const route = useRoute();
-onMounted(() => {
-  videoStore.fetchVideo(userStore.id);
+onMounted(async () => {
+  await videoStore.fetchVideo(route.params.id);
 });
 </script>
 

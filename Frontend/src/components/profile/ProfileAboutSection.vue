@@ -4,7 +4,7 @@
       <b>Обо мне</b>
     </p>
     <p class="text-gray-600 text-md md:text-lg leading-normal">
-      {{ description }}
+      {{ profileStore.description }}
     </p>
   </div>
 </template>
@@ -12,8 +12,6 @@
 <script setup>
 import { useProfileStore } from "../../store/profile-store";
 const profileStore = useProfileStore();
-import { ref } from "vue";
-const description = ref(profileStore.description);
 </script>
 
 <style lang="scss" scoped></style>

@@ -13,7 +13,7 @@
           placeholder="Введите имя"
           v-model:input="firstName"
           inputType="text"
-          error="Тестовая ошибка"
+          :error="errorFirstName"
         />
         <TextInput
           label="Фамилия"
@@ -21,7 +21,7 @@
           placeholder="Введите Фамилию"
           v-model:input="lastName"
           inputType="text"
-          error="Тестовая ошибка"
+          :error="errorLastName"
         />
         <TextInput
           label="Пароль"
@@ -29,7 +29,7 @@
           placeholder="Введите пароль"
           v-model:input="password"
           inputType="password"
-          error="Тестовая ошибка"
+          :error="errorPassword"
         />
 
         <TextInput
@@ -38,7 +38,7 @@
           placeholder="Повторите пароль"
           v-model:input="repeatPassword"
           inputType="password"
-          error="Тестовая ошибка"
+          :error="errorRepeatPassword"
         />
         <TextInput
           label="Электронная почта"
@@ -46,7 +46,7 @@
           placeholder="Введите электронную почту"
           v-model:input="email"
           inputType="Email"
-          error="Тестовая ошибка"
+          :error="errorEmail"
         />
         <button
           class="block bg-green-500 w-full text-white py-2 font-bold mt-6 cursor-pointer hover:bg-green-700 rounded-lg"
@@ -71,26 +71,76 @@
 import axios from "axios";
 import TextInput from "../components/global/TextInput.vue";
 import { useUserStore } from "../store/user-store";
+import { useProfileStore } from "../store/profile-store";
+import { useSongStore } from "../store/song-store";
+import { usePostStore } from "../store/post-store";
+import { useVideoStore } from "../store/video-store";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const userStore = useUserStore();
-const errors = ref([]);
+const profileStore = useProfileStore();
+const songStore = useSongStore();
+const postStore = usePostStore();
+const videoStore = useVideoStore();
 const firstName = ref(null);
 const lastName = ref(null);
 const password = ref(null);
 const repeatPassword = ref(null);
 const email = ref(null);
+const errorFirstName = ref(null);
+const errorLastName = ref(null);
+const errorPassword = ref(null);
+const errorRepeatPassword = ref(null);
+const errorEmail = ref(null);
 const register = async () => {
   try {
     const res = await axios.post("http://localhost:9999/register", {
       firstName: firstName.value,
       lastName: lastName.value,
       password: password.value,
+      repeatPassword: repeatPassword.value,
       email: email.value,
     });
-    console.log(res);
+    const user = JSON.parse(window.localStorage.getItem("user"));
+    axios.defaults.headers.common["Authorization"] = "Bearer " + user.token;
     userStore.setUserDetails(res);
+    await profileStore.fetchProfile(userStore.id);
+    await songStore.fetchSongsByUserId(userStore.id);
+    await postStore.fetchPosts(userStore.id);
+    await videoStore.fetchVideo(userStore.id);
+    router.push("/account/profile/" + userStore.id);
   } catch (error) {
-    console.log(error);
+    if (error.response.data.message === "ERROR_FIRST_NAME") {
+      errorFirstName.value = error.response.data.error;
+      setTimeout(() => {
+        errorFirstName.value = "";
+      }, 2000);
+    }
+    if (error.response.data.message === "ERROR_LAST_NAME") {
+      errorLastName.value = error.response.data.error;
+      setTimeout(() => {
+        errorLastName.value = "";
+      }, 2000);
+    }
+    if (error.response.data.message === "ERROR_PASSWORD") {
+      errorPassword.value = error.response.data.error;
+      setTimeout(() => {
+        errorPassword.value = "";
+      }, 2000);
+    }
+    if (error.response.data.message === "ERROR_REPEAT_PASSWORD") {
+      errorRepeatPassword.value = error.response.data.error;
+      setTimeout(() => {
+        errorRepeatPassword.value = "";
+      }, 2000);
+    }
+    if (error.response.data.message === "ERROR_EMAIL") {
+      errorEmail.value = error.response.data.error;
+      setTimeout(() => {
+        errorEmail.value = "";
+      }, 2000);
+    }
   }
 };
 </script>

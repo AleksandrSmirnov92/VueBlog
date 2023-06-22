@@ -14,10 +14,12 @@ const songStore = useSongStore();
 const userStore = useUserStore();
 const songList = [];
 onMounted(() => {
-  if (songStore.songs !== null) {
-    mapSongs();
-  }
-  thePlayer();
+  setTimeout(() => {
+    if (songStore.songs !== null) {
+      mapSongs();
+    }
+    thePlayer();
+  }, 1000);
 });
 const mapSongs = () => {
   let newSongs = songStore.songs.map((song) => {

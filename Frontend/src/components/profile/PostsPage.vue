@@ -10,7 +10,7 @@
             <img :src="post.users.image" class="rounded-full" width="50" />
           </router-link>
           <div class="ml-2 font-bold text-2xl">
-            <router-link :to="'/account/profile/'">
+            <router-link :to="'/account/profile/' + post.users.id">
               {{ post.users.first_name }} {{ post.users.last_name }}
             </router-link>
           </div>

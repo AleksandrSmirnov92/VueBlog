@@ -46,7 +46,7 @@ import MyButton from "../../components/global/MyButton.vue";
 import SongSection from "../../components/profile/SongSection.vue";
 import VideoSection from "../../components/profile/VideoSection.vue";
 import PostsSection from "../../components/profile/PostsSection.vue";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useUserStore } from "../../store/user-store";
 import { useProfileStore } from "../../store/profile-store";
 const userStore = useUserStore();
@@ -56,7 +56,13 @@ const route = useRoute();
 onMounted(async () => {
   await profileStore.fetchProfile(route.params.id);
 });
-
+watch(
+  () => route.fullPath,
+  () => {
+    location.reload();
+  }
+);
+//  добавить watch на url проверку
 // const firstName = ref(profileStore.firstName);
 // const lastName = ref(profileStore.lastName);
 // const location = ref(profileStore.location);

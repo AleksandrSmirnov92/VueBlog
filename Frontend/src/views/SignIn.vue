@@ -13,7 +13,7 @@
           placeholder="Введите электроную почту"
           v-model:input="email"
           inputType="email"
-          error="Тестовая ошибка"
+          :error="errorEmail"
         />
         <TextInput
           label="Введите пароль"
@@ -21,7 +21,7 @@
           placeholder="Введите пароль"
           v-model:input="password"
           inputType="password"
-          error="Тестовая ошибка"
+          :error="errorPassword"
         />
         <button
           class="block bg-green-500 w-full text-white py-2 font-bold mt-6 cursor-pointer hover:bg-green-700 rounded-lg"
@@ -45,22 +45,51 @@
 <script setup>
 import TextInput from "../components/global/TextInput.vue";
 import { useUserStore } from "../store/user-store";
+import { useProfileStore } from "../store/profile-store";
+import { useSongStore } from "../store/song-store";
+import { usePostStore } from "../store/post-store";
+import { useVideoStore } from "../store/video-store";
 import axios from "axios";
+import { useRouter } from "vue-router";
 import { ref } from "vue";
+
+const router = useRouter();
 const userStore = useUserStore();
+const profileStore = useProfileStore();
+const songStore = useSongStore();
+const postStore = usePostStore();
+const videoStore = useVideoStore();
 const email = ref(null);
 const password = ref(null);
-const errors = ref([]);
+const errorEmail = ref(null);
+const errorPassword = ref(null);
 const login = async () => {
   try {
     const res = await axios.post("http://localhost:9999/login", {
       email: email.value,
       password: password.value,
     });
-    console.log(res);
+    const user = JSON.parse(window.localStorage.getItem("user"));
+    axios.defaults.headers.common["Authorization"] = "Bearer " + user.token;
     userStore.setUserDetails(res);
+    await profileStore.fetchProfile(userStore.id);
+    await songStore.fetchSongsByUserId(userStore.id);
+    await postStore.fetchPosts(userStore.id);
+    await videoStore.fetchVideo(userStore.id);
+    router.push("/account/profile/" + userStore.id);
   } catch (error) {
-    console.log(error);
+    if (error.response.data.message === "ERROR_EMAIL") {
+      errorEmail.value = error.response.data.error;
+      setTimeout(() => {
+        errorEmail.value = "";
+      }, 2000);
+    }
+    if (error.response.data.message === "ERROR_PASSWORD") {
+      errorPassword.value = error.response.data.error;
+      setTimeout(() => {
+        errorPassword.value = "";
+      }, 2000);
+    }
   }
 };
 </script>

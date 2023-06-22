@@ -65,7 +65,7 @@ const addSong = async () => {
       errors.value = null;
       await songStore.fetchSongsByUserId(userStore.id);
       setTimeout(() => {
-        router.push("/account/profile");
+        router.push("/account/profile/" + userStore.id);
       }, 100);
     }
   } catch (err) {

@@ -110,7 +110,7 @@ const createPost = async () => {
   try {
     await axios.post("posts/", data);
     postStore.fetchPosts(userStore.id);
-    router.push("/account/profile");
+    router.push("/account/profile/" + userStore.id);
   } catch (error) {
     console.log(error);
   }

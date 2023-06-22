@@ -27,7 +27,7 @@
             <div class="bg-white sm:border">
               <div class="flex justify-center items-center py-2">
                 <router-link
-                  :to="'/account/profile/' + post.id"
+                  :to="'/account/post-by-id/' + post.id"
                   class="rounded-full"
                   width="50"
                 >
@@ -53,7 +53,7 @@
                   class="mt-2 flex item-center justify-around sm:justify-end"
                 >
                   <router-link
-                    class="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-1 px-2 rounded-full"
+                    class="mr-2 bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-1 px-2 rounded-full"
                     :to="'/account/edit-post/' + post.id"
                     >Редактировать</router-link
                   >
@@ -83,8 +83,8 @@ import axios from "axios";
 import { onMounted } from "vue";
 const postStore = usePostStore();
 const userStore = useUserStore();
-onMounted(() => {
-  postStore.fetchPosts(route.params.id);
+onMounted(async () => {
+  await postStore.fetchPosts(route.params.id);
 });
 const deletePost = async (post) => {
   let res = await axios.delete("posts/" + userStore.id, { data: post });

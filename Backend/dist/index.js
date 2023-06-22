@@ -16,10 +16,13 @@ const DB_1 = require("./config/DB");
 const express_1 = __importDefault(require("express"));
 const multer = require("multer");
 const sharp = require("sharp");
-const express_validator_1 = require("express-validator");
-const { body, validationResult } = require("express-validator");
+// import { check } from "express-validator";
+// import { equal, notDeepStrictEqual } from "assert";
+// const { body, validationResult } = require("express-validator");
 // validation
-const validationCheck = require("../dist/ValidationShema/ValidationCheck.js");
+// const validationCheck = require("../dist/ValidationShema/ValidationCheck.js");
+const validationLogin = require("../dist/ValidationShema/ValidationLogin.js");
+const validationRegister = require("../dist/ValidationShema/ValidationRegister.js");
 //  /validation
 // cutUrl
 const cutUrl = require("../dist/helpers/cutUrl.js");
@@ -62,17 +65,24 @@ const RegisterController = (req, res) => __awaiter(void 0, void 0, void 0, funct
     });
     if (error) {
         console.log(error);
-        res.status(404).json({
-            status: "ERROR",
-            message: error.message,
-        });
+        if (error.code === "23505") {
+            return res.status(404).json({
+                message: "ERROR_EMAIL",
+                error: "такая почта уже существует",
+            });
+        }
+        else {
+            return res.status(404).json({
+                status: "ERROR",
+                error: error,
+            });
+        }
     }
     let { data } = yield DB_1.supabase
         .from("users")
         .select("id,email,password,first_name,last_name")
         .match({ email: email })
         .single();
-    // console.log(data);
     const token = jwt.sign({ _id: data.id }, process.env.SECRET_KEY);
     res.status(200).json({
         status: "SUCCESS",
@@ -80,13 +90,8 @@ const RegisterController = (req, res) => __awaiter(void 0, void 0, void 0, funct
         jwt: token,
     });
 });
-app.post("/register", (0, express_validator_1.check)("firstName", "Ошибка ввода данных").isString().exists(), (0, express_validator_1.check)("lastName", "Ошибка ввода данных").isString().exists(), (0, express_validator_1.check)("password", "Пароль должен быть не меньше 4 символов")
-    .isString()
-    .isLength({ min: 4, max: 10 })
-    .exists(), (0, express_validator_1.check)("email", "Ошибка ввода email")
-    .isEmail({})
-    .isLength({ min: 10, max: 30 })
-    .exists(), validationCheck, RegisterController);
+app.post("/register", validationRegister, RegisterController);
+// Login
 const LoginController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { email, password } = req.body;
     let { data, error } = yield DB_1.supabase
@@ -96,12 +101,15 @@ const LoginController = (req, res) => __awaiter(void 0, void 0, void 0, function
         .single();
     if (error) {
         console.log("ошибка", error);
+        return res
+            .status(404)
+            .json({ message: "ERROR_EMAIL", error: "Такого Email не сущетсвует" });
     }
     if (data) {
         if (!(yield bcrypt.compare(password, data.password))) {
             res.status(404).json({
-                status: "ERROR",
-                message: "Учетные данные не верны",
+                message: "ERROR_PASSWORD",
+                error: "Неверный пароль",
             });
         }
         else {
@@ -120,43 +128,46 @@ const LoginController = (req, res) => __awaiter(void 0, void 0, void 0, function
         }
     }
 });
-app.post("/login", (0, express_validator_1.check)("email", "Ошибка ввода email")
-    .isEmail()
-    .isLength({ min: 10, max: 30 })
-    .exists(), (0, express_validator_1.check)("password", "Пароль должен быть не меньше 4 символов")
-    .isLength({
-    min: 4,
-    max: 10,
-})
-    .exists(), validationCheck, LoginController);
-//
-const getProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const cookie = req.cookies["jwt"];
-        const user = jwt.verify(cookie, process.env.SECRET_KEY);
-        if (!user) {
-            return res.status(401).json({ message: "Неавторизован" });
-        }
-        res.send(user);
-    }
-    catch (e) {
-        return res.status(401).json({ message: "Неавторизован" });
-    }
-});
-app.get("/profile", getProfile);
-const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // Функция выхода
+app.post("/login", validationLogin, LoginController);
+const logoutController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.cookie("jwt", "", { maxAge: 0 });
-    res.status(200).json({
-        message: "SUCCESS delete",
+    return res.status(200).json({
+        message: "Вы вышли из системы",
     });
 });
-app.post("/logout", logout);
-app.put("/profile/:id", (req, res) => {
-    let { id } = req.params;
-    let { firstName } = req.body;
-    console.log(id, firstName);
-});
+app.post("/logout", logoutController);
+//
+//
+//
+//
+//
+//
+// const getProfile = async (req: Request, res: Response) => {
+//   try {
+//     const cookie = req.cookies["jwt"];
+//     const user = jwt.verify(cookie, process.env.SECRET_KEY);
+//     if (!user) {
+//       return res.status(401).json({ message: "Неавторизован" });
+//     }
+//     res.send(user);
+//   } catch (e) {
+//     return res.status(401).json({ message: "Неавторизован" });
+//   }
+// };
+// app.get("/profile", getProfile);
+// const logout = async (req: Request, res: Response) => {
+//   // Функция выхода
+//   res.cookie("jwt", "", { maxAge: 0 });
+//   res.status(200).json({
+//     message: "SUCCESS delete",
+//   });
+// };
+// app.post("/logout", logout);
+// app.put("/profile/:id", (req: Request, res: Response) => {
+//   let { id } = req.params;
+//   let { firstName } = req.body;
+//   console.log(id, firstName);
+// });
 // upload profil
 app.post("/users/:id", upload.single("image"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { id } = req.params;
@@ -207,15 +218,19 @@ app.post("/users/:id", upload.single("image"), (req, res) => __awaiter(void 0, v
 // get information about user profil
 app.get("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { id } = req.params;
-    let { data } = yield DB_1.supabase
+    let { data, error } = yield DB_1.supabase
         .from("users")
         .select("id, first_name, last_name, location, description,image")
         .eq("id", id)
         .single();
-    // console.log(data);
-    res.status(201).json({
-        user: data,
-    });
+    if (error) {
+        res.status(404).json({ message: "ERROR" });
+    }
+    if (data) {
+        res.status(201).json({
+            user: data,
+        });
+    }
 }));
 //
 //
@@ -423,11 +438,11 @@ app.post("/posts", upload.single("image"), (req, res) => __awaiter(void 0, void 
 app.get("/posts/:userId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { userId } = req.params;
     if (req.query.page !== "0") {
-        let count = yield DB_1.supabase.from("posts").select("*").eq("user", userId);
+        let count = yield DB_1.supabase.from("posts").select("*");
         let { data, error } = yield DB_1.supabase
             .from("posts")
             .select("id, title, location, description,image,imageName, users (id,first_name,last_name,image)")
-            .eq("user", userId)
+            // .eq("user", userId)
             .range(req.query.prePage, Number(req.query.page) - 1);
         if (error) {
             console.log(error);
