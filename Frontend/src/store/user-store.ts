@@ -24,7 +24,7 @@ export const useUserStore = defineStore("user", {
       this.$state.description = res.description;
     },
     async fetchUser() {
-      const res = await axios.get("users/" + this.$state.id);
+      const res = await axios.get("/users/" + this.$state.id);
       this.$state.id = res.data.user.id;
       this.$state.firstName = res.data.user.first_name;
       this.$state.lastName = res.data.user.last_name;

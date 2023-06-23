@@ -35,7 +35,7 @@ const userStore = useUserStore();
 const songStore = useSongStore();
 const deleteSong = async (song) => {
   try {
-    await axios.delete("songs/" + userStore.id, { data: song });
+    await axios.delete("/songs/" + userStore.id, { data: song });
     await songStore.fetchSongsByUserId(userStore.id);
     alert("Песня успешно удаленна");
   } catch (err) {

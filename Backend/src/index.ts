@@ -7,8 +7,8 @@ const sharp = require("sharp");
 // const { body, validationResult } = require("express-validator");
 // validation
 // const validationCheck = require("../dist/ValidationShema/ValidationCheck.js");
-const validationLogin = require("../dist/ValidationShema/ValidationLogin.js");
-const validationRegister = require("../dist/ValidationShema/ValidationRegister.js");
+// const validationLogin = require("../dist/ValidationShema/ValidationLogin.js");
+// const validationRegister = require("../dist/ValidationShema/ValidationRegister.js");
 //  /validation
 // cutUrl
 const cutUrl = require("../dist/helpers/cutUrl.js");
@@ -17,8 +17,8 @@ require("dotenv").config();
 const upload = multer({
   limits: { fieldSize: 2 * 1024 * 1024 },
 });
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+// const bcrypt = require("bcryptjs");
+// const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const app = express();
 
@@ -35,261 +35,16 @@ app.use(
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../public")));
 
-const RegisterController = async (req: Request, res: Response) => {
-  let { firstName, lastName, email, password } = req.body;
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-  const newUser = {
-    firstName,
-    lastName,
-    email,
-    password: hashedPassword,
-  };
-  let { error } = await supabase.from("users").insert({
-    first_name: newUser.firstName,
-    last_name: newUser.lastName,
-    email: newUser.email,
-    password: newUser.password,
-    image: null,
-    location: null,
-    description: null,
-  });
-  if (error) {
-    console.log(error);
-    if (error.code === "23505") {
-      return res.status(404).json({
-        message: "ERROR_EMAIL",
-        error: "такая почта уже существует",
-      });
-    } else {
-      return res.status(404).json({
-        status: "ERROR",
-        error: error,
-      });
-    }
-  }
-  let { data } = await supabase
-    .from("users")
-    .select("id,email,password,first_name,last_name")
-    .match({ email: email })
-    .single();
-  const token = jwt.sign({ _id: data.id }, process.env.SECRET_KEY);
-  res.status(200).json({
-    status: "SUCCESS",
-    user: data,
-    jwt: token,
-  });
-};
-app.post("/register", validationRegister, RegisterController);
-
-// Login
-const LoginController = async (req: Request, res: Response) => {
-  let { email, password } = req.body;
-  let { data, error } = await supabase
-    .from("users")
-    .select("id,email,password,first_name,last_name")
-    .match({ email: email })
-    .single();
-  if (error) {
-    console.log("ошибка", error);
-    return res
-      .status(404)
-      .json({ message: "ERROR_EMAIL", error: "Такого Email не сущетсвует" });
-  }
-  if (data) {
-    if (!(await bcrypt.compare(password, data.password))) {
-      res.status(404).json({
-        message: "ERROR_PASSWORD",
-        error: "Неверный пароль",
-      });
-    } else {
-      const token = jwt.sign({ _id: data.id }, process.env.SECRET_KEY);
-      res
-        .status(200)
-        .cookie("jwt", token, {
-          httpOnly: true,
-          maxAge: 24 * 60 * 60 * 1000,
-        })
-        .json({
-          status: "SUCCESS",
-          user: data,
-          jwt: token,
-        });
-    }
-  }
-};
-app.post("/login", validationLogin, LoginController);
-const logoutController = async (req: Request, res: Response) => {
-  res.cookie("jwt", "", { maxAge: 0 });
-  return res.status(200).json({
-    message: "Вы вышли из системы",
-  });
-};
-app.post("/logout", logoutController);
-//
-//
-//
-//
-//
-//
-// const getProfile = async (req: Request, res: Response) => {
-//   try {
-//     const cookie = req.cookies["jwt"];
-//     const user = jwt.verify(cookie, process.env.SECRET_KEY);
-//     if (!user) {
-//       return res.status(401).json({ message: "Неавторизован" });
-//     }
-//     res.send(user);
-//   } catch (e) {
-//     return res.status(401).json({ message: "Неавторизован" });
-//   }
-// };
-// app.get("/profile", getProfile);
-
-// const logout = async (req: Request, res: Response) => {
-//   // Функция выхода
-//   res.cookie("jwt", "", { maxAge: 0 });
-//   res.status(200).json({
-//     message: "SUCCESS delete",
-//   });
-// };
-// app.post("/logout", logout);
-// app.put("/profile/:id", (req: Request, res: Response) => {
-//   let { id } = req.params;
-//   let { firstName } = req.body;
-//   console.log(id, firstName);
-// });
-
-// upload profil
-app.post(
-  "/users/:id",
-  upload.single("image"),
-  async (req: any, res: Response) => {
-    let { id } = req.params;
-    let { left, top, width, height } = req.body;
-    let { first_name, last_name, location, description, image } = req.body;
-    let photoUrl;
-    try {
-      if (req.file) {
-        let photoBuffer = req.file.buffer;
-        const croppedPhotoBuffer = await sharp(photoBuffer)
-          .extract({
-            left: parseInt(left),
-            top: parseInt(top),
-            width: parseInt(width),
-            height: parseInt(height),
-          })
-          .toBuffer();
-
-        const { data, error } = await supabase.storage
-          .from("photos")
-          .upload(`cropped_${req.file.originalname}`, croppedPhotoBuffer);
-        // if (error) {
-        //   throw error;
-        // }
-        photoUrl = supabase.storage
-          .from("photos")
-          .getPublicUrl(`cropped_${req.file.originalname}`);
-      }
-
-      let updateUser = await supabase
-        .from("users")
-        .update({
-          first_name: first_name,
-          last_name: last_name,
-          location: location,
-          description: description,
-          image: photoUrl ? photoUrl.data.publicUrl : image,
-        })
-        .eq("id", id)
-        .single();
-      res.status(200).json({
-        message: "SUCCESS",
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-);
-// /////////////////////////////////////
-// get information about user profil
-app.get("/users/:id", async (req: Request, res: Response) => {
-  let { id } = req.params;
-  let { data, error } = await supabase
-    .from("users")
-    .select("id, first_name, last_name, location, description,image")
-    .eq("id", id)
-    .single();
-  if (error) {
-    res.status(404).json({ message: "ERROR" });
-  }
-  if (data) {
-    res.status(201).json({
-      user: data,
-    });
-  }
-});
-//
-//
-//
-// upload songs
-app.post("/songs", upload.single("song"), async (req: any, res: Response) => {
-  try {
-    let { user_id, title } = req.body;
-    if (!title) {
-      return res.status(404).json({
-        message: "Введите заголовок",
-      });
-    }
-    let songBuffer = req.file.buffer;
-    let songUrl;
-    if (!req.file) {
-      return res.status(404).json({
-        message: "Песня не загруженна",
-      });
-    } else {
-      const { data, error } = await supabase.storage
-        .from("songs")
-        .upload(
-          `user_${user_id}` + "/" + `song_${req.file.originalname}`,
-          songBuffer
-        );
-
-      if (error) {
-        console.log(error);
-      }
-      if (data) {
-        songUrl = supabase.storage
-          .from("songs")
-          .getPublicUrl(
-            `user_${user_id}` + "/" + `song_${req.file.originalname}`
-          );
-        let { error } = await supabase
-          .from("songs")
-          .insert({
-            user: user_id,
-            title: title,
-            song: songUrl.data.publicUrl,
-            songName: req.file.originalname,
-          })
-          .single();
-        if (error) {
-          console.log(error);
-        }
-        if (data) {
-          return res.status(200).json({
-            status: "SUCCESS",
-          });
-        }
-      }
-    }
-  } catch (error) {
-    console.log(error);
-  }
-});
-//
-//
-//
+const RegisterRouter = require("../dist/Routes/RegisterRouter.js");
+app.use("/register", RegisterRouter);
+const LoginRouter = require("../dist/Routes/LoginRouter.js");
+app.use("/login", LoginRouter);
+const Logout = require("../dist/Routes/LogoutRouter.js");
+app.use("/logout", Logout);
+const UsersRouter = require("../dist/Routes/UsersRouter.js");
+app.use("/users", UsersRouter);
+const SongsRouter = require("../dist/Routes/SongsRouter.js");
+app.use("/songs", SongsRouter);
 //  songByUserController
 app.get("/songs/:id", async (req: Request, res: Response) => {
   let { id } = req.params;
@@ -600,4 +355,32 @@ app.delete("/posts/:userId", async (req: Request, res: Response) => {
     });
   }
 });
+
+// const getProfile = async (req: Request, res: Response) => {
+//   try {
+//     const cookie = req.cookies["jwt"];
+//     const user = jwt.verify(cookie, process.env.SECRET_KEY);
+//     if (!user) {
+//       return res.status(401).json({ message: "Неавторизован" });
+//     }
+//     res.send(user);
+//   } catch (e) {
+//     return res.status(401).json({ message: "Неавторизован" });
+//   }
+// };
+// app.get("/profile", getProfile);
+
+// const logout = async (req: Request, res: Response) => {
+//   // Функция выхода
+//   res.cookie("jwt", "", { maxAge: 0 });
+//   res.status(200).json({
+//     message: "SUCCESS delete",
+//   });
+// };
+// app.post("/logout", logout);
+// app.put("/profile/:id", (req: Request, res: Response) => {
+//   let { id } = req.params;
+//   let { firstName } = req.body;
+//   console.log(id, firstName);
+// });
 module.exports = app;

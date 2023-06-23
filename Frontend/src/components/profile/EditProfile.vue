@@ -20,7 +20,7 @@
           placeholder="Введите имя"
           v-model:input="firstName"
           inputType="text"
-          error="Тестовая ошибка"
+          :error="errorFirstName"
         />
       </div>
       <div class="w-full px-3 md:w-1/2">
@@ -29,7 +29,7 @@
           placeholder="Введите фамилию"
           v-model:input="lastName"
           inputType="text"
-          error="Тестовая ошибка"
+          :error="errorLastName"
         />
       </div>
     </div>
@@ -40,7 +40,7 @@
           placeholder="Москва"
           v-model:input="location"
           inputType="text"
-          error="Тестовая ошибка"
+          error=""
         />
         <CropperButton
           label="Фотография профиля"
@@ -52,7 +52,7 @@
           label="Описание"
           placeholder="Введите сюда информацию"
           v-model:description="description"
-          error="тестовая ошибка"
+          error=""
         />
       </div>
       <div class="flex flex-wrap w-full mt-4 mb-6">
@@ -77,7 +77,6 @@ import CropperModal from "../global/CropperModal.vue";
 import CropperImage from "../global/CropperImage.vue";
 const router = useRouter();
 const userStore = useUserStore();
-const errors = ref([]);
 let firstName = ref(null);
 let lastName = ref(null);
 let location = ref(null);
@@ -85,9 +84,10 @@ let description = ref(null);
 let showModal = ref(false);
 let imageData = null;
 let image = ref(null);
-
-onMounted(() => {
-  userStore.fetchUser();
+const errorFirstName = ref(null);
+const errorLastName = ref(null);
+onMounted(async () => {
+  await userStore.fetchUser();
   firstName.value = userStore.firstName || null;
   lastName.value = userStore.lastName || null;
   location.value = userStore.location || null;
@@ -115,11 +115,23 @@ const udateProfil = async () => {
   }
 
   try {
-    await axios.post("users/" + userStore.id + "?_method=PUT", data);
+    await axios.post("/users/" + userStore.id + "?_method=PUT", data);
     await userStore.fetchUser();
     router.push("/account/profile/" + userStore.id);
   } catch (error) {
     console.log(error);
+    if (error.response.data.message === "ERROR_FIRST_NAME") {
+      errorFirstName.value = error.response.data.error;
+      setTimeout(() => {
+        errorFirstName.value = "";
+      }, 2000);
+    }
+    if (error.response.data.message === "ERROR_LAST_NAME") {
+      errorLastName.value = error.response.data.error;
+      setTimeout(() => {
+        errorLastName.value = "";
+      }, 2000);
+    }
   }
 };
 </script>

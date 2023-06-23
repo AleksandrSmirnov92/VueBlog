@@ -89,7 +89,7 @@ const open = ref(false);
 
 const logout = async () => {
   try {
-    let res = await axios.post("logout", {
+    let res = await axios.post("/logout", {
       user_id: userStore.id,
     });
     await userStore.clearUser();

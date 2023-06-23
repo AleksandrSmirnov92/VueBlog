@@ -45,7 +45,7 @@ onMounted(async () => {
 });
 const getPostById = async () => {
   try {
-    let res = await axios.get("post/" + route.params.id);
+    let res = await axios.get("/post/" + route.params.id);
     post.value = res.data.post;
   } catch (err) {
     console.log(err);

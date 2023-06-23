@@ -58,7 +58,7 @@ onMounted(async () => {
 });
 const getPosts = async () => {
   try {
-    let res = await axios.get(`posts/` + userStore.id, {
+    let res = await axios.get(`/posts/` + userStore.id, {
       params: { page: page.value, prePage: page.value - 1 },
     });
     console.log(res.data.posts);

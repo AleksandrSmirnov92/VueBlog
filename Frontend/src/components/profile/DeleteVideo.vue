@@ -34,7 +34,7 @@ import { useUserStore } from "../../store/user-store";
 const userStore = useUserStore();
 const videoStore = useVideoStore();
 const deleteVideo = async (video) => {
-  let res = await axios.delete("youtube/" + video.id);
+  let res = await axios.delete("/youtube/" + video.id);
   if (res.data.message === "SUCCESS") {
     videoStore.fetchVideo(userStore.id);
   }

@@ -7,7 +7,7 @@ export const usePostStore = defineStore("post", {
   }),
   actions: {
     async fetchPosts(user_id: string) {
-      let res = await axios.get("posts/" + user_id, {
+      let res = await axios.get("/posts/" + user_id, {
         params: { page: 0 },
       });
 

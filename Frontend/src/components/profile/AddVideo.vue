@@ -42,7 +42,7 @@ let errors = ref([]);
 const addYoutubeVideoLink = async () => {
   errors.value = [];
   try {
-    let res = await axios.post("youtube", {
+    let res = await axios.post("/youtube", {
       user_id: userStore.id,
       title: title.value,
       url: videoCode.value,

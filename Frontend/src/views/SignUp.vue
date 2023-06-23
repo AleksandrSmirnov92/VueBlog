@@ -95,20 +95,20 @@ const errorRepeatPassword = ref(null);
 const errorEmail = ref(null);
 const register = async () => {
   try {
-    const res = await axios.post("http://localhost:9999/register", {
+    const res = await axios.post("/register", {
       firstName: firstName.value,
       lastName: lastName.value,
       password: password.value,
       repeatPassword: repeatPassword.value,
       email: email.value,
     });
-    const user = JSON.parse(window.localStorage.getItem("user"));
-    axios.defaults.headers.common["Authorization"] = "Bearer " + user.token;
+    // const user = JSON.parse(window.localStorage.getItem("user"));
+    // axios.defaults.headers.common["Authorization"] = "Bearer " + user.token;
     userStore.setUserDetails(res);
-    await profileStore.fetchProfile(userStore.id);
-    await songStore.fetchSongsByUserId(userStore.id);
-    await postStore.fetchPosts(userStore.id);
-    await videoStore.fetchVideo(userStore.id);
+    profileStore.fetchProfile(userStore.id);
+    songStore.fetchSongsByUserId(userStore.id);
+    postStore.fetchPosts(userStore.id);
+    videoStore.fetchVideo(userStore.id);
     router.push("/account/profile/" + userStore.id);
   } catch (error) {
     if (error.response.data.message === "ERROR_FIRST_NAME") {

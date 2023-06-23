@@ -65,13 +65,14 @@ const errorEmail = ref(null);
 const errorPassword = ref(null);
 const login = async () => {
   try {
-    const res = await axios.post("http://localhost:9999/login", {
+    const res = await axios.post("/login", {
       email: email.value,
       password: password.value,
     });
-    const user = JSON.parse(window.localStorage.getItem("user"));
-    axios.defaults.headers.common["Authorization"] = "Bearer " + user.token;
     userStore.setUserDetails(res);
+    // const user = JSON.parse(window.localStorage.getItem("user"));
+    // axios.defaults.headers.common["Authorization"] = "Bearer " + user.token;
+
     await profileStore.fetchProfile(userStore.id);
     await songStore.fetchSongsByUserId(userStore.id);
     await postStore.fetchPosts(userStore.id);

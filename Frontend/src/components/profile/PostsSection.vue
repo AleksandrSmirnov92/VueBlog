@@ -87,7 +87,7 @@ onMounted(async () => {
   await postStore.fetchPosts(route.params.id);
 });
 const deletePost = async (post) => {
-  let res = await axios.delete("posts/" + userStore.id, { data: post });
+  let res = await axios.delete("/posts/" + userStore.id, { data: post });
   await postStore.fetchPosts(userStore.id);
   alert("Пост успешно удален");
 };

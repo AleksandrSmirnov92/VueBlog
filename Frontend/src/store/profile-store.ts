@@ -14,14 +14,17 @@ export const useProfileStore = defineStore("profile", {
   actions: {
     async fetchProfile(id: string) {
       try {
-        let res = await axios.get("users/" + id);
+        let res = await axios.get("/users/" + id);
         console.log(res);
         this.$state.id = res.data.user.id;
         this.$state.firstName = res.data.user.first_name;
         this.$state.lastName = res.data.user.last_name;
         this.$state.location = res.data.user.location;
         this.$state.description = res.data.user.description;
-        this.$state.image = res.data.user.image;
+        this.$state.image =
+          res.data.user.image !== null
+            ? res.data.user.image
+            : "../../images/User-avatar.svg.png";
       } catch (error) {
         this.$state.description = null;
         this.$state.image = "../../images/User-avatar.svg.png";

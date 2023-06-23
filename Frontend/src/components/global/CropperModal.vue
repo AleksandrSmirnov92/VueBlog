@@ -1,12 +1,12 @@
 <template>
-  <div class="relative z-10">
+  <div class="relative">
     <div
       class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
     ></div>
 
     <div class="fixed inset-0 z-10 overflow-y-auto mt-6">
       <div
-        class="flex min-h-full items-end justify-center p-4 items-center py-2"
+        class="flex w-full sm:min-h-full items-end justify-center p-4 items-center py-2"
       >
         <div
           class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all my-8 mt-10 max-w-4xl"
@@ -36,8 +36,9 @@
                   </div>
                 </div>
 
-                <div class="flex justify-center max-w-2xl">
+                <div class="flex justify-center sm:w-full max-w-2xl">
                   <Cropper
+                    class="text-center w-60 sm:w-full"
                     ref="cropper"
                     :src="uploadedImage"
                     :stencil-props="{
@@ -50,12 +51,14 @@
                   />
                 </div>
 
-                <div class="pb-3 flex flex-row-reverse pt-4">
+                <div
+                  class="pb-3 flex flex-col justify-center sm:justify-start sm:flex-row-reverse pt-4"
+                >
                   <button
                     v-if="uploadedImage"
                     @click="crop"
                     type="button"
-                    class="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-white text-base font-medium shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ml-3 w-auto text-sm"
+                    class="mb-2 inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-white text-base font-medium shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ml-3 w-auto text-sm"
                   >
                     Обрезать изображение
                   </button>
@@ -63,7 +66,7 @@
                   <button
                     @click="$emit('showModal', false)"
                     type="button"
-                    class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-white text-base font-medium shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 ml-3 w-auto text-sm"
+                    class="mb-2 inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-white text-base font-medium shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 ml-3 w-auto text-sm"
                   >
                     Выйти
                   </button>

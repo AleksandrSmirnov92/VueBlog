@@ -9,7 +9,7 @@
       placeholder="Напишите заголовок для песни "
       v-model:input="title"
       inputType="text"
-      :error="errors ? errors : ''"
+      :error="errorsTitle ? errorsTitle : ''"
     />
 
     <div class="w-full">
@@ -46,7 +46,7 @@ const router = useRouter();
 let title = ref(null);
 let song = ref(null);
 let file = ref(null);
-let errors = ref(null);
+let errorsTitle = ref(null);
 const handleFileUpload = () => {
   song.value = file.value.files[0];
 };
@@ -60,16 +60,21 @@ const addSong = async () => {
     data.append("user_id", userStore.id);
     data.append("title", title.value || "");
     data.append("song", song.value);
-    let res = await axios.post("songs", data);
+    let res = await axios.post("/songs", data);
     if (res.data.status === "SUCCESS") {
-      errors.value = null;
+      console.log("тут");
+      errorsTitle.value = null;
       await songStore.fetchSongsByUserId(userStore.id);
-      setTimeout(() => {
-        router.push("/account/profile/" + userStore.id);
-      }, 100);
+      router.push("/account/profile/" + userStore.id);
     }
   } catch (err) {
-    errors.value = err.response.data.message;
+    console.log(err);
+    if (err.response.data.message === "Duplicate") {
+      alert("Такая песня уже существует");
+    }
+    if (err.response.data.status === "title") {
+      errorsTitle.value = err.response.data.message;
+    }
   }
 };
 </script>

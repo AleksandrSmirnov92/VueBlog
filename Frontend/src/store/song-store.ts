@@ -6,7 +6,7 @@ export const useSongStore = defineStore("song", {
   }),
   actions: {
     async fetchSongsByUserId(userId: string) {
-      const res = await axios.get("songs/" + userId);
+      const res = await axios.get("/songs/" + userId);
       this.$state.songs = res.data.songs;
     },
     clearSongs() {
