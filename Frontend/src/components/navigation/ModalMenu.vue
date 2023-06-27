@@ -69,7 +69,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import MyButton from "../global/MyButton.vue";
 import { ref } from "vue";
 import axios from "axios";

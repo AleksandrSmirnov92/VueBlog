@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { toRefs, computed } from "vue";
 const emit = defineEmits(["update:description"]);
 const props = defineProps({

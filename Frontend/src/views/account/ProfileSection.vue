@@ -39,7 +39,7 @@
   <PostsSection />
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import ProfileInfoSection from "../../components/profile/ProfileInfoSection.vue";
 import ProfileAboutSection from "../../components/profile/ProfileAboutSection.vue";
 import MyButton from "../../components/global/MyButton.vue";
@@ -49,10 +49,11 @@ import PostsSection from "../../components/profile/PostsSection.vue";
 import { onMounted, ref, watch } from "vue";
 import { useUserStore } from "../../store/user-store";
 import { useProfileStore } from "../../store/profile-store";
+import { useRoute } from "vue-router";
 const userStore = useUserStore();
 const profileStore = useProfileStore();
-import { useRoute } from "vue-router";
-const route = useRoute();
+
+const route: any = useRoute();
 onMounted(async () => {
   await profileStore.fetchProfile(route.params.id);
 });

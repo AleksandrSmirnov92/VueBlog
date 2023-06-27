@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { toRefs } from "vue";
 const props = defineProps({
   btnText: String,

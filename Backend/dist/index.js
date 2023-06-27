@@ -32,4 +32,11 @@ const PostsRouter = require("../dist/Routes/PostsRouter.js");
 app.use("/posts", PostsRouter);
 const PostRouter = require("../dist/Routes/PostRouter.js");
 app.use("/post", PostRouter);
+app.get("/*", function (req, res) {
+    res.sendFile(path.join(__dirname, "../public/index.html"), function (err) {
+        if (err) {
+            res.status(500).send(err);
+        }
+    });
+});
 module.exports = app;

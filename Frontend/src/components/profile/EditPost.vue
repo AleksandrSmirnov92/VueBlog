@@ -18,7 +18,7 @@
           placeholder="Шикарный пост"
           v-model:input="title"
           inputType="text"
-          :error="errors.title ? errors.title[0] : ''"
+          error=""
         />
       </div>
       <div class="w-full md:w-1/2 px-3">
@@ -27,7 +27,7 @@
           placeholder="Москва,МО"
           v-model:input="location"
           inputType="text"
-          :error="errors.location ? errors.location[0] : ''"
+          error=""
         />
       </div>
     </div>
@@ -54,7 +54,7 @@
           label="Описание"
           placeholder="Пожалуйста напишите описание"
           v-model:description="description"
-          :error="errors.description ? errors.description[0] : ''"
+          error=""
         />
       </div>
     </div>
@@ -67,7 +67,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import SubmitFormButton from "../global/SubmitFormButton.vue";
 import TextArea from "../global/TextArea.vue";
 import CropperImage from "../global/CropperImage.vue";
@@ -82,7 +82,7 @@ import { useUserStore } from "../../store/user-store";
 const postStore = usePostStore();
 const userStore = useUserStore();
 let showModal = ref(false);
-let errors = ref([]);
+// let errors = ref([]);
 let title = ref(null);
 let location = ref(null);
 let description = ref(null);

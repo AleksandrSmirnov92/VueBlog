@@ -1,5 +1,8 @@
 <template>
-  <div v-if="description !== ''" class="py-2 text-center sm:text-left">
+  <div
+    v-if="profileStore.description !== ''"
+    class="py-2 text-center sm:text-left"
+  >
     <p class="text-gray-900 text-lg">
       <b>Обо мне</b>
     </p>
@@ -9,9 +12,9 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useProfileStore } from "../../store/profile-store";
-const profileStore = useProfileStore();
+const profileStore: any = useProfileStore();
 </script>
 
 <style lang="scss" scoped></style>

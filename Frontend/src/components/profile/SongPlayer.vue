@@ -4,9 +4,9 @@
   </div>
 </template>
 
-<script setup>
-import { useSongStore } from "../../store/song-store.ts";
-import { useUserStore } from "../../store/user-store.ts";
+<script lang="ts" setup>
+import { useSongStore } from "../../store/song-store";
+import { useUserStore } from "../../store/user-store";
 import { onMounted } from "vue";
 import "aplayer/dist/APlayer.min.css";
 import APlayer from "aplayer";
@@ -42,4 +42,4 @@ const thePlayer = () => {
 };
 </script>
 
-<style scoped></style>
+<style></style>

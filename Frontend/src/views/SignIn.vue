@@ -42,7 +42,7 @@
     </div>
   </div>
 </template>
-<script setup>
+<script lang="ts" setup>
 import TextInput from "../components/global/TextInput.vue";
 import { useUserStore } from "../store/user-store";
 import { useProfileStore } from "../store/profile-store";

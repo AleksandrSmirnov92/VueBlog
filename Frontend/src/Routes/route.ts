@@ -15,7 +15,7 @@ import CreatePost from "../components/profile/CreatePost.vue";
 import EditPost from "../components/profile/EditPost.vue";
 import PostsPage from "../components/profile/PostsPage.vue";
 import PostById from "../components/profile/PostById.vue";
-const routes = [
+const routes: any = [
   {
     path: "/",
 

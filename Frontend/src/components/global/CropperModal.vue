@@ -47,7 +47,13 @@
                       maxAspectRatio:
                         maxAspectRatioProp.width / maxAspectRatioProp.height,
                     }"
-                    @change="change"
+                    @change="
+                      {
+                        {
+                          change as any;
+                        }
+                      }
+                    "
                   />
                 </div>
 
@@ -80,7 +86,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, toRefs } from "vue";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";

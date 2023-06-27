@@ -30,7 +30,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -39,7 +39,7 @@ import { useUserStore } from "../../store/user-store";
 const route = useRoute();
 const postStore = usePostStore();
 const userStore = useUserStore();
-let post = ref(null);
+let post: any = ref(null);
 onMounted(async () => {
   await getPostById();
 });

@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { toRefs, computed } from "vue";
 const props = defineProps({
   label: String,

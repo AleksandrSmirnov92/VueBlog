@@ -15,7 +15,7 @@
   </nav>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import ModalMenu from "./ModalMenu.vue";
 </script>
 

@@ -64,7 +64,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import TextArea from "../global/TextArea.vue";
 import SubmitFormButton from "../global/SubmitFormButton.vue";
 import CroppedImage from "../global/CropperImage.vue";

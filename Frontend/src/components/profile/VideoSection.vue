@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useRoute } from "vue-router";
 import { onMounted } from "vue";
 import MyButton from "../global/MyButton.vue";
@@ -43,7 +43,7 @@ import { useVideoStore } from "../../store/video-store";
 import { useUserStore } from "../../store/user-store";
 const videoStore = useVideoStore();
 const userStore = useUserStore();
-const route = useRoute();
+const route: any = useRoute();
 onMounted(async () => {
   await videoStore.fetchVideo(route.params.id);
 });

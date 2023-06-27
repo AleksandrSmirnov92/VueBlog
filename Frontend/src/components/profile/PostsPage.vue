@@ -41,7 +41,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import { usePostStore } from "../../store/post-store";

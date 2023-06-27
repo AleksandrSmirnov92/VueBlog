@@ -1,4 +1,4 @@
-<script setup></script>
+<script lang="ts" setup></script>
 <template>
   <div class="container-personal">
     <div class="px-4 md:w-3/4 lg:w-2/3 mx-auto text-center">

@@ -73,14 +73,15 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useRoute } from "vue-router";
-const route = useRoute();
 import MyButton from "../global/MyButton.vue";
 import { usePostStore } from "../../store/post-store";
 import { useUserStore } from "../../store/user-store";
 import axios from "axios";
 import { onMounted } from "vue";
+const route: any = useRoute();
+
 const postStore = usePostStore();
 const userStore = useUserStore();
 onMounted(async () => {

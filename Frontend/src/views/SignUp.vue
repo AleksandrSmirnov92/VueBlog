@@ -67,7 +67,7 @@
     </div>
   </div>
 </template>
-<script setup>
+<script lang="ts" setup>
 import axios from "axios";
 import TextInput from "../components/global/TextInput.vue";
 import { useUserStore } from "../store/user-store";

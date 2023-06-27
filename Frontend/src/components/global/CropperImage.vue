@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { defineProps, toRefs } from "vue";
 const props = defineProps({ label: String, image: String });
 const { label, image } = toRefs(props);

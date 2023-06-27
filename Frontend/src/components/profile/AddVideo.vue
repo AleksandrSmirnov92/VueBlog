@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import TextInput from "../global/TextInput.vue";
@@ -36,7 +36,7 @@ import { useVideoStore } from "../../store/video-store";
 const userStore = useUserStore();
 const videoStore = useVideoStore();
 const router = useRouter();
-let title = ref(null);
+let title = ref("");
 let videoCode = ref(null);
 let errorTitle = ref(null);
 const addYoutubeVideoLink = async () => {

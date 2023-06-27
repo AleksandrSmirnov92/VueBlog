@@ -31,7 +31,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref } from "vue";
 import axios from "axios";
 import TextInput from "../global/TextInput.vue";
@@ -43,7 +43,7 @@ const userStore = useUserStore();
 const songStore = useSongStore();
 
 const router = useRouter();
-let title = ref(null);
+let title = ref("");
 let song = ref(null);
 let file = ref(null);
 let errorsTitle = ref(null);

@@ -10,7 +10,7 @@
         class="flex flex-wrap items-center"
       >
         <div class="w-1/4 mr-auto mt-2 text-lg p-1 text-gray-900">
-          {{ ++index }}. {{ video.title }}
+          {{ index + 1 }}. {{ video.title }}
           <iframe class="w-full h-20" :src="video.url"></iframe>
         </div>
 
@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import axios from "axios";
 import { useVideoStore } from "../../store/video-store";
 import { useUserStore } from "../../store/user-store";

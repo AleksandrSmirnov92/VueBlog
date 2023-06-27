@@ -10,7 +10,7 @@
         class="flex flex-wrap"
       >
         <div class="w-3/4 mr-auto mt-2 text-lg p-1 text-gray-900">
-          {{ ++index }} {{ song.title }}
+          {{ index + 1 }} {{ song.title }}
         </div>
 
         <div class="w-1/4 ml-auto p-1">
@@ -26,13 +26,14 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import axios from "axios";
-
+import { ref } from "vue";
 import { useSongStore } from "../../store/song-store";
 import { useUserStore } from "../../store/user-store";
 const userStore = useUserStore();
 const songStore = useSongStore();
+let indexSong: any = ref(1);
 const deleteSong = async (song) => {
   try {
     await axios.delete("/songs/" + userStore.id, { data: song });

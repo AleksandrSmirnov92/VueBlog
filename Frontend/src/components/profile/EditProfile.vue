@@ -64,7 +64,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useUserStore } from "../../store/user-store";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
