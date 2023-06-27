@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const loginModel = require("../../dist/models/loginModel.js");
 exports.LoginController = async (req: Request, res: Response) => {
   let { email, password } = req.body;
+  console.log("заходим");
   const login = await loginModel.login(email);
   if (login.status === "ERROR") {
     return res.status(404).json(login);
