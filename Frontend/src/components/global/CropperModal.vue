@@ -47,13 +47,6 @@
                       maxAspectRatio:
                         maxAspectRatioProp.width / maxAspectRatioProp.height,
                     }"
-                    @change="
-                      {
-                        {
-                          change as any;
-                        }
-                      }
-                    "
                   />
                 </div>
 
