@@ -10,10 +10,13 @@ const app = (0, express_1.default)();
 const cors = require("cors");
 const path = require("path");
 app.use(express_1.default.json());
-app.use(cors({
-    credentials: true,
-    origin: ["http://localhost:5173"],
-}));
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: ["http://localhost:5173"],
+//   })
+// );
+app.use(cors());
 app.use(cookieParser());
 app.use(express_1.default.static(path.join(__dirname, "../public")));
 const RegisterRouter = require("../dist/Routes/RegisterRouter.js");
