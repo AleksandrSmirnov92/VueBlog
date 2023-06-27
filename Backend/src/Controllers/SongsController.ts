@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 const songsModel = require("../../dist/models/songsModel.js");
-exports.songsController = async (req: any, res: Response) => {
+exports.uploadSongsController = async (req: any, res: Response) => {
   try {
     let { user_id, title } = req.body;
     if (!title) {
@@ -33,5 +33,29 @@ exports.songsController = async (req: any, res: Response) => {
     }
   } catch (error) {
     console.log(error);
+  }
+};
+exports.getSongsByIdController = async (req: Request, res: Response) => {
+  let { id } = req.params;
+  let getSong = await songsModel.getSongsById(id);
+  if (getSong.status === "ERROR") {
+    return res.status(200).json({
+      message: getSong.message,
+    });
+  }
+  if (getSong.status === "SUCCESS") {
+    return res.status(200).json({
+      songs: getSong.songs,
+    });
+  }
+};
+exports.deleteSongController = async (req: Request, res: Response) => {
+  let { id, songName } = req.body;
+  let { idUser } = req.params;
+  let deleteSong = await songsModel.deleteSongByid(idUser, songName, id);
+  if (deleteSong.status === "SUCCESS") {
+    return res.status(200).json({
+      message: "SUCCESS",
+    });
   }
 };

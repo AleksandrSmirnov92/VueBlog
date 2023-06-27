@@ -61,7 +61,7 @@ const getPosts = async () => {
     let res = await axios.get(`/posts/` + userStore.id, {
       params: { page: page.value, prePage: page.value - 1 },
     });
-    console.log(res.data.posts);
+    console.log(res.data);
     pageCount.value = res.data.page_count;
     posts.value = res.data.posts;
   } catch (err) {

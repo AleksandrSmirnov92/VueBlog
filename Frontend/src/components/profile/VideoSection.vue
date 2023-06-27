@@ -24,10 +24,12 @@
         </div>
       </div>
     </div>
-    <div v-for="video of videoStore.videos" class="flex flex-wrap mb-4">
-      <div class="my-1 px-1 w-full md:w-1/2 lg:w-1/2 text-center">
-        <div class="text-xl text-gray-900">{{ video.title }}</div>
-        <iframe class="w-full h-60" :src="video.url"></iframe>
+    <div class="flex flex-col sm:flex-row sm:flex-wrap mb-4">
+      <div v-for="video of videoStore.videos" class="pr-1 pl-1 w-full md:w-1/2">
+        <div class="my-1 px-1 w-full md:w-full text-center">
+          <div class="text-xl text-gray-900">{{ video.title }}</div>
+          <iframe class="w-full h-60" :src="video.url"></iframe>
+        </div>
       </div>
     </div>
   </div>

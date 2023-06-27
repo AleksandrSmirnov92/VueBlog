@@ -9,7 +9,7 @@
       placeholder="Заголовок для видео"
       v-model:input="title"
       inputType="text"
-      error="тестовая ошибка"
+      :error="errorTitle"
     />
 
     <TextInput
@@ -18,7 +18,7 @@
       placeholder="2VnYXKwneUQ"
       v-model:input="videoCode"
       inputType="text"
-      error="тестовая ошибка"
+      error=""
     />
 
     <SubmitFormButton btnText="Добавить видео" @submit="addYoutubeVideoLink" />
@@ -38,20 +38,23 @@ const videoStore = useVideoStore();
 const router = useRouter();
 let title = ref(null);
 let videoCode = ref(null);
-let errors = ref([]);
+let errorTitle = ref(null);
 const addYoutubeVideoLink = async () => {
-  errors.value = [];
+  errorTitle.value = null;
   try {
     let res = await axios.post("/youtube", {
       user_id: userStore.id,
       title: title.value,
       url: videoCode.value,
     });
-    if (res.data.message === "SUCCESS") {
+    if (res.data.status === "SUCCESS") {
       router.push("/account/profile/" + userStore.id);
     }
   } catch (err) {
-    console.log(err);
+    console.log(err.response.data.message);
+    if (err.response.data.status === "ERROR_TITLE") {
+      errorTitle.value = err.response.data.message;
+    }
   }
 };
 </script>

@@ -10,7 +10,7 @@ export const usePostStore = defineStore("post", {
       let res = await axios.get("/posts/" + user_id, {
         params: { page: 0 },
       });
-
+      console.log(res.data);
       this.$state.posts = res.data.posts;
     },
     clearPosts() {

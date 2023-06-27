@@ -50,6 +50,7 @@ async function getUserById(id: string | number) {
     };
   }
 }
+
 module.exports = {
   uploadFotoProfil,
   updateUser,
