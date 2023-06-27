@@ -27,6 +27,7 @@
           class="block bg-green-500 w-full text-white py-2 font-bold mt-6 cursor-pointer hover:bg-green-700 rounded-lg"
           type="submit"
           @click="login"
+          @touchstart="login"
         >
           Войти
         </button>
