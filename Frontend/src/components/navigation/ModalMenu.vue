@@ -17,53 +17,59 @@
           <div v-if="userStore.id" class="w-full mb-2 flex justify-center">
             <my-button
               @click="open = !open"
-              class="w-60 sm:w-full text-white text-lg px-7 sm:px-auto"
+              class="w-60 sm:w-full text-lg px-7 sm:px-auto"
               btnText="Профиль"
               :btnUrl="`/account/profile/` + userStore.id"
               btnColor="green"
+              textColor="white"
             />
           </div>
           <div v-if="userStore.id" class="w-full mb-2 flex justify-center">
             <my-button
               @click="open = !open"
-              class="w-60 sm:w-full text-white text-lg px-7 sm:px-auto"
+              class="w-60 sm:w-full text-lg px-7 sm:px-auto"
               btnText="Посты"
               :btnUrl="'/account/posts-page/' + userStore.id"
               btnColor="green"
+              textColor="white"
             />
           </div>
           <div v-if="!userStore.id" class="w-full mb-2 flex justify-center">
             <my-button
               @click="open = !open"
-              class="w-60 sm:w-full text-white text-lg px-7 sm:px-auto"
+              class="w-60 sm:w-full text-lg px-7 sm:px-auto"
               btnText="Войти"
               btnUrl="/SignIn"
               btnColor="green"
+              textColor="white"
             />
           </div>
           <div v-if="!userStore.id" class="w-full mb-2 flex justify-center">
             <my-button
               @click="open = !open"
-              class="w-60 sm:w-full text-white text-lg px-7 sm:px-auto"
+              class="w-60 sm:w-full text-lg px-7 sm:px-auto"
               btnText="Регистрация"
               btnUrl="/SignUp"
               btnColor="green"
+              textColor="white"
             />
           </div>
           <div v-if="userStore.id" class="w-full mb-2 flex justify-center">
             <my-button
               @click="logout"
-              class="w-60 sm:w-full text-white text-lg px-7 sm:px-auto"
+              class="w-60 sm:w-full text-lg px-7 sm:px-auto"
               btnText="Выйти"
               btnColor="green"
+              textColor="white"
             />
           </div>
           <div class="w-full mb-2 flex justify-center">
             <my-button
               @click="open = !open"
-              class="w-60 sm:w-full text-white text-lg px-7 sm:px-auto"
+              class="w-60 sm:w-full text-lg px-7 sm:px-auto"
               btnText="Закрыть"
               btnColor="red"
+              textColor="white"
             />
           </div>
         </div>

@@ -2,7 +2,10 @@
   <router-link
     class="text-center bg-transparent text-gray-900 font-semi-bold hover:text-white py-2 px-4 border hover:border-transparent rounded hover:bg-green-500 border-green-500"
     :to="btnUrl"
-    :class="[btnColor ? `hover:bg-${btnColor}-500 border-${btnColor}-500` : '']"
+    :class="[
+      btnColor ? `hover:bg-${btnColor}-500 border-${btnColor}-500` : '',
+      textColor ? `text-${textColor}` : '',
+    ]"
     >{{ btnText }}
   </router-link>
 </template>
@@ -13,6 +16,7 @@ const props = defineProps({
   btnText: String,
   btnUrl: { type: String, default: "" },
   btnColor: String,
+  textColor: String,
 });
-const { btnText, btnUrl, btnColor } = toRefs(props);
+const { btnText, btnUrl, btnColor, textColor } = toRefs(props);
 </script>
