@@ -15,6 +15,7 @@
               btnText="Создать пост"
               btnUrl="/account/create-post"
               btnColor="green"
+              textColor="gray-900"
             />
           </div>
         </div>

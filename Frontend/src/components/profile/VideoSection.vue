@@ -14,12 +14,14 @@
             btnText="Удалить видео"
             btnUrl="/account/delete-video"
             btnColor="red"
+            textColor="gray-900"
           />
           <my-button
             class="ml-2"
             btnText="Добавить видео"
             btnUrl="/account/add-video"
             btnColor="green"
+            textColor="gray-900"
           />
         </div>
       </div>

@@ -14,12 +14,14 @@
             btnText="Удалить песню"
             btnUrl="/account/delete-song"
             btnColor="red"
+            textColor="gray-900"
           />
           <my-button
             class="ml-2"
             btnText="Добавить песню"
             btnUrl="/account/add-song"
             btnColor="green"
+            textColor="gray-900"
           />
         </div>
       </div>
