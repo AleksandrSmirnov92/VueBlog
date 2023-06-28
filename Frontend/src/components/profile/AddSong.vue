@@ -78,5 +78,3 @@ const addSong = async () => {
   }
 };
 </script>
-
-<style scoped></style>

@@ -17,7 +17,7 @@ module.exports = function validationLogin(
   if (!validateEmail(email)) {
     return res
       .status(400)
-      .json({ message: "ERROR_EMAIL", error: "Неправильно введет email" });
+      .json({ message: "ERROR_EMAIL", error: "Неправильно введен email" });
   }
   if (!password) {
     return res

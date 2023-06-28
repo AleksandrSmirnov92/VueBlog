@@ -31,5 +31,3 @@ const descriptionComputed = computed({
   set: (val) => emit("update:description", val),
 });
 </script>
-
-<style scoped></style>

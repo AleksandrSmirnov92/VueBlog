@@ -58,5 +58,3 @@ const addYoutubeVideoLink = async () => {
   }
 };
 </script>
-
-<style scoped></style>

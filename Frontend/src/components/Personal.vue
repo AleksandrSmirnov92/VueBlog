@@ -11,7 +11,7 @@
         Авторизируйся или зарегестрируйся
       </p>
       <p class="py-4 text-xl text-center text-gray-300">
-        Здесь описание моего проекта
+        Здесь может быть описание твоего проекта
       </p>
     </div>
     <div class="mt-8"></div>
@@ -33,7 +33,22 @@
   </div>
   <div class="videoDarkOverlay"></div>
   <video autoplay muted loop id="myVideo">
-    <source src="../video/abstract_line5.mp4" type="video/mp4" />
+    <!-- <source
+      src="../video/abstract_line.ogv"
+      type="video/ogg"
+      codecs="theora,
+    vorbis"
+    /> -->
+    <source
+      src="../video/abstract_line.mp4"
+      type="video/mp4"
+      codecs="avc1.42E01E, mp4a.40.2"
+    />
+    <source
+      src="../video/abstract_line.webm"
+      type="video/webm"
+      codecs="vp8, vorbis"
+    />
   </video>
 </template>
 <style scoped>

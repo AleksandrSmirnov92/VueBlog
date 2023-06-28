@@ -22,5 +22,3 @@ const props = defineProps({
 });
 const { btnText, label } = toRefs(props);
 </script>
-
-<style scoped></style>

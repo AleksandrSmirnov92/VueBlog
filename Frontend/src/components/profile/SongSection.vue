@@ -42,5 +42,3 @@ onMounted(async () => {
   await songStore.fetchSongsByUserId(route.params.id);
 });
 </script>
-
-<style scoped></style>

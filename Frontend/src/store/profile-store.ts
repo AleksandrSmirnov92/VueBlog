@@ -15,7 +15,6 @@ export const useProfileStore = defineStore("profile", {
     async fetchProfile(id: string) {
       try {
         let res = await axios.get("/users/" + id);
-        console.log(res);
         this.$state.id = res.data.user.id;
         this.$state.firstName = res.data.user.first_name;
         this.$state.lastName = res.data.user.last_name;

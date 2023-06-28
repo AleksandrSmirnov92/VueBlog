@@ -14,5 +14,3 @@ const props = defineProps({
 });
 const { btnText } = toRefs(props);
 </script>
-
-<style scoped></style>

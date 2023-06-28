@@ -135,5 +135,3 @@ const udateProfil = async () => {
   }
 };
 </script>
-
-<style scoped></style>

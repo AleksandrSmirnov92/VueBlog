@@ -35,5 +35,3 @@ const inputComputed = computed({
   set: (val) => emit("update:input", val),
 });
 </script>
-
-<style scoped></style>

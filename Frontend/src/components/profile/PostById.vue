@@ -52,5 +52,3 @@ const getPostById = async () => {
   }
 };
 </script>
-
-<style scoped></style>

@@ -6,8 +6,19 @@
     <div class="mx-auto">
       <div v-for="post in posts" :key="post" class="my-4">
         <div class="flex items-center py-2">
-          <router-link :to="'/account/profile/' + post.users.id">
-            <img :src="post.users.image" class="rounded-full" width="50" />
+          <router-link
+            :to="'/account/profile/' + post.users.id"
+            class="overflow-hidden"
+          >
+            <img
+              :src="
+                post.users.image
+                  ? post.users.image
+                  : '../../../images/User-avatar.svg.png'
+              "
+              class="rounded-full overflow-hidden"
+              width="50"
+            />
           </router-link>
           <div class="ml-2 font-bold text-2xl">
             <router-link :to="'/account/profile/' + post.users.id">

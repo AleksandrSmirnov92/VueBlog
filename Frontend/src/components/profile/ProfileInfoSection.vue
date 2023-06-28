@@ -12,5 +12,3 @@
 import { useSongStore } from "../../store/song-store";
 const songStore = useSongStore();
 </script>
-
-<style scoped></style>

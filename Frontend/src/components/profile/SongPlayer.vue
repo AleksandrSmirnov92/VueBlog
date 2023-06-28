@@ -41,5 +41,3 @@ const thePlayer = () => {
   });
 };
 </script>
-
-<style></style>

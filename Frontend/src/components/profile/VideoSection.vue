@@ -48,5 +48,3 @@ onMounted(async () => {
   await videoStore.fetchVideo(route.params.id);
 });
 </script>
-
-<style scoped></style>

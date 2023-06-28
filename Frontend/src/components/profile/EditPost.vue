@@ -82,7 +82,6 @@ import { useUserStore } from "../../store/user-store";
 const postStore = usePostStore();
 const userStore = useUserStore();
 let showModal = ref(false);
-// let errors = ref([]);
 let title = ref(null);
 let location = ref(null);
 let description = ref(null);
@@ -111,8 +110,6 @@ const getPostById = async () => {
       imageName.value = res.data.post.imageName;
     }
   } catch (err) {
-    // обработать ошибки на title,location,description
-    // errors.value = err.response.data.errors;
     console.log(err);
   }
 };
@@ -143,5 +140,3 @@ const updatePost = async () => {
   }
 };
 </script>
-
-<style scoped></style>

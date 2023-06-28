@@ -5,10 +5,10 @@
         <div
           class="flex flex-wrap justify-center sm:justify-start font-bold text-gray-100"
         >
-          <div class="text-gray-900 text-xl">Создать пост</div>
+          <div class="text-gray-900 text-xl">Мои посты</div>
           <div class="bg-green-500 w-full h-1"></div>
           <div
-            class="flex justify-around sm:justify-end w-full mt-4"
+            class="flex justify-around sm:justify-end sm:w-full mt-4 mb-2 sm:my-4"
             v-if="userStore.id == route.params.id"
           >
             <my-button
@@ -28,11 +28,11 @@
               <div class="flex justify-center items-center py-2">
                 <router-link
                   :to="'/account/post-by-id/' + post.id"
-                  class="rounded-full"
+                  class="rounded-full w-full sm:w-auto"
                   width="50"
                 >
                   <img
-                    class="border rounded-lg h-28 w-full"
+                    class="border rounded-lg h-auto sm:h-28 w-full"
                     :src="post.image"
                     alt=""
                   />
@@ -53,12 +53,12 @@
                   class="mt-2 flex item-center justify-around sm:justify-end"
                 >
                   <router-link
-                    class="mr-2 bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-1 px-2 rounded-full"
+                    class="mr-2 border border-green-500 border-solid sm:border-none bg-white sm:bg-blue-500 hover:bg-blue-700 text-gray-900 sm:text-white text-sm font-bold py-2 px-4 sm:rounded-full cursor-pointer"
                     :to="'/account/edit-post/' + post.id"
                     >Редактировать</router-link
                   >
                   <button
-                    class="bg-red-500 hover:bg-red-700 text-white text-sm font-bold py-1 px-2 rounded-full cursor-pointer"
+                    class="border border-red-500 border-solid sm:border-none bg-white sm:bg-red-500 hover:bg-red-700 text-gray-900 sm:text-white text-sm font-bold py-2 px-4 sm:rounded-full cursor-pointer"
                     @click="deletePost(post)"
                   >
                     Удалить
@@ -79,12 +79,14 @@ import MyButton from "../global/MyButton.vue";
 import { usePostStore } from "../../store/post-store";
 import { useUserStore } from "../../store/user-store";
 import axios from "axios";
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 const route: any = useRoute();
 
 const postStore = usePostStore();
 const userStore = useUserStore();
 onMounted(async () => {
+  const host = window.location.host;
+  console.log(host);
   await postStore.fetchPosts(route.params.id);
 });
 const deletePost = async (post) => {
@@ -92,6 +94,10 @@ const deletePost = async (post) => {
   await postStore.fetchPosts(userStore.id);
   alert("Пост успешно удален");
 };
+watch(
+  () => route.fullPath,
+  () => {
+    location.reload();
+  }
+);
 </script>
-
-<style scoped></style>

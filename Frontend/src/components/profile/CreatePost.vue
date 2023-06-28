@@ -116,5 +116,3 @@ const createPost = async () => {
   }
 };
 </script>
-
-<style scoped></style>

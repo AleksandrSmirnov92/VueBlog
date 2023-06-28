@@ -40,5 +40,3 @@ const deleteVideo = async (video) => {
   }
 };
 </script>
-
-<style scoped></style>

@@ -44,5 +44,3 @@ const deleteSong = async (song) => {
   }
 };
 </script>
-
-<style scoped></style>

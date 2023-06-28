@@ -13,7 +13,6 @@ export const useUserStore = defineStore("user", {
   }),
   actions: {
     async setUserDetails(res: any) {
-      console.log("setUserDetails", res.data);
       this.$state.id = res.data.user.id;
       this.$state.token = res.data.jwt;
       this.$state.firstName = res.data.user.first_name;

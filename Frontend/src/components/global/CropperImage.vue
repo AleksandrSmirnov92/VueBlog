@@ -6,7 +6,7 @@
       {{ label }}
     </label>
 
-    <div class="w-60 h-60">
+    <div class="w-60 h-auto">
       <img
         class="rounded w-full border-solid border-4 border-green-500"
         :src="image !== '../../images/User-avatar.svg.png' ? image : ''"
@@ -20,5 +20,3 @@ import { defineProps, toRefs } from "vue";
 const props = defineProps({ label: String, image: String });
 const { label, image } = toRefs(props);
 </script>
-
-<style scoped></style>

@@ -13,56 +13,59 @@
       <div class="bg-black absolute w-full h-full opacity-75"></div>
       <div class="my-auto fixed border-white w-80 pt-16">
         <p class="text-2xl text-center text-white text-bold">Меню</p>
-        <div class="pt-4 text-center">
-          <my-button
-            v-if="userStore.id"
-            @click="open = !open"
-            class="w-full text-white text-lg px-7 sm:px-auto mb-2"
-            btnText="Профиль"
-            :btnUrl="`/account/profile/` + userStore.id"
-            btnColor="green"
-          />
-          <my-button
-            v-if="userStore.id"
-            @click="open = !open"
-            class="w-full text-white text-lg px-7 sm:px-auto mb-2"
-            btnText="Посты"
-            :btnUrl="'/account/posts-page/' + userStore.id"
-            btnColor="green"
-          />
-        </div>
-        <div class="pt-10 sm:mt-4 text-center">
-          <my-button
-            v-if="!userStore.id"
-            @click="open = !open"
-            class="w-full text-white text-lg px-7 sm:px-auto mb-2"
-            btnText="Войти"
-            btnUrl="/SignIn"
-            btnColor="green"
-          />
-          <my-button
-            v-if="!userStore.id"
-            @click="open = !open"
-            class="w-full text-white text-lg px-7 sm:px-auto mb-2"
-            btnText="Регистрация"
-            btnUrl="/SignUp"
-            btnColor="green"
-          />
-          <my-button
-            v-if="userStore.id"
-            @click="logout"
-            class="w-full text-white text-lg px-7 sm:px-auto mb-2"
-            btnText="Выйти"
-            btnColor="green"
-          />
-        </div>
-        <div class="pt-10 sm:mt-4 text-center">
-          <my-button
-            @click="open = !open"
-            class="w-full text-white text-lg px-8 sm:px-auto"
-            btnText="Закрыть"
-            btnColor="red"
-          />
+        <div class="pt-4 flex flex-col justify-center">
+          <div v-if="userStore.id" class="w-full mb-2 flex justify-center">
+            <my-button
+              @click="open = !open"
+              class="w-60 sm:w-full text-white text-lg px-7 sm:px-auto"
+              btnText="Профиль"
+              :btnUrl="`/account/profile/` + userStore.id"
+              btnColor="green"
+            />
+          </div>
+          <div v-if="userStore.id" class="w-full mb-2 flex justify-center">
+            <my-button
+              @click="open = !open"
+              class="w-60 sm:w-full text-white text-lg px-7 sm:px-auto"
+              btnText="Посты"
+              :btnUrl="'/account/posts-page/' + userStore.id"
+              btnColor="green"
+            />
+          </div>
+          <div v-if="!userStore.id" class="w-full mb-2 flex justify-center">
+            <my-button
+              @click="open = !open"
+              class="w-60 sm:w-full text-white text-lg px-7 sm:px-auto"
+              btnText="Войти"
+              btnUrl="/SignIn"
+              btnColor="green"
+            />
+          </div>
+          <div v-if="!userStore.id" class="w-full mb-2 flex justify-center">
+            <my-button
+              @click="open = !open"
+              class="w-60 sm:w-full text-white text-lg px-7 sm:px-auto"
+              btnText="Регистрация"
+              btnUrl="/SignUp"
+              btnColor="green"
+            />
+          </div>
+          <div v-if="userStore.id" class="w-full mb-2 flex justify-center">
+            <my-button
+              @click="logout"
+              class="w-60 sm:w-full text-white text-lg px-7 sm:px-auto"
+              btnText="Выйти"
+              btnColor="green"
+            />
+          </div>
+          <div class="w-full mb-2 flex justify-center">
+            <my-button
+              @click="open = !open"
+              class="w-60 sm:w-full text-white text-lg px-7 sm:px-auto"
+              btnText="Закрыть"
+              btnColor="red"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -104,5 +107,3 @@ const logout = async () => {
   }
 };
 </script>
-
-<style scoped></style>
