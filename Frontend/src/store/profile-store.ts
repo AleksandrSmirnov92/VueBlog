@@ -23,10 +23,11 @@ export const useProfileStore = defineStore("profile", {
         this.$state.image =
           res.data.user.image !== null
             ? res.data.user.image
-            : "../../images/User-avatar.svg.png";
+            : "https://hlsivvkunvjmwgegcrzt.supabase.co/storage/v1/object/public/defaultFoto/User.png";
       } catch (error) {
         this.$state.description = null;
-        this.$state.image = "../../images/User-avatar.svg.png";
+        this.$state.image =
+          "https://hlsivvkunvjmwgegcrzt.supabase.co/storage/v1/object/public/defaultFoto/User.png";
         this.$state.id = null;
         this.$state.firstName = null;
         this.$state.lastName = null;

@@ -59,5 +59,6 @@ const profileStore = useProfileStore();
 const route: any = useRoute();
 onMounted(async () => {
   await profileStore.fetchProfile(route.params.id);
+  console.log(profileStore.image);
 });
 </script>

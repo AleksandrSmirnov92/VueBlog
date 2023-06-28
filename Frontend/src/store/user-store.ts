@@ -32,7 +32,8 @@ export const useUserStore = defineStore("user", {
       if (res.data.user.image) {
         this.$state.image = res.data.user.image;
       } else {
-        this.$state.image = "../../images/User-avatar.svg.png";
+        this.$state.image =
+          "https://hlsivvkunvjmwgegcrzt.supabase.co/storage/v1/object/public/defaultFoto/User.png";
       }
     },
     clearUser() {
@@ -42,7 +43,8 @@ export const useUserStore = defineStore("user", {
       this.$state.lastName = null;
       this.$state.email = null;
       this.$state.location = null;
-      this.$state.image = null;
+      this.$state.image =
+        "https://hlsivvkunvjmwgegcrzt.supabase.co/storage/v1/object/public/defaultFoto/User.png";
       this.$state.description = null;
     },
   },

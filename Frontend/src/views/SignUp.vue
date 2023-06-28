@@ -53,7 +53,7 @@
           type="submit"
           @click="register"
         >
-          Зарегестрироваться
+          Зарегистрироваться
         </button>
       </div>
       <p

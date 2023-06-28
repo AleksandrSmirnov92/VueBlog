@@ -26,7 +26,7 @@
           class="w-full sm:mx-4 sm:w-1/6 sm:min-w-min text-center my-2 px-2 py-2 bg-blue-600 text-white front-semibold text-2xl shadow-md hover:bg-blue-500 cursor-pointer rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           to="/SignUp"
         >
-          <span class="sm:mx-7">Зарегестрироваться</span>
+          <span class="sm:mx-7">Зарегистрироваться</span>
         </router-link>
       </div>
     </div>

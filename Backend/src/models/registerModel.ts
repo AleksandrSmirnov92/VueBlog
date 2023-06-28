@@ -11,7 +11,8 @@ async function register(newUser: User) {
     last_name: newUser.lastName,
     email: newUser.email,
     password: newUser.password,
-    image: null,
+    image:
+      "https://hlsivvkunvjmwgegcrzt.supabase.co/storage/v1/object/public/defaultFoto/User.png",
     location: null,
     description: null,
   });

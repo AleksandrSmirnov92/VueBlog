@@ -37,7 +37,7 @@
       >
         Еще не зарегестрированы ?
         <router-link class="text-blue-400 px-8 hover:underline" to="/SignUp"
-          >Зарегестрируйтесь</router-link
+          >Зарегистрируйтесь</router-link
         >
       </p>
     </div>

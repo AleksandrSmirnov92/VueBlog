@@ -11,11 +11,7 @@
             class="overflow-hidden"
           >
             <img
-              :src="
-                post.users.image
-                  ? post.users.image
-                  : '../../../images/User-avatar.svg.png'
-              "
+              :src="post.users.image"
               class="rounded-full overflow-hidden"
               width="50"
             />
@@ -72,7 +68,6 @@ const getPosts = async () => {
     let res = await axios.get(`/posts/` + userStore.id, {
       params: { page: page.value, prePage: page.value - 1 },
     });
-    console.log(res.data);
     pageCount.value = res.data.page_count;
     posts.value = res.data.posts;
   } catch (err) {
